@@ -1,0 +1,33 @@
+app:
+  name: "securitest"
+
+server:
+  host: "localhost"
+  port: "5000"
+
+db:
+  host: "db"
+  # host: "localhost"
+  username: "name"
+  password: "pass"
+  port: "5432"
+  name: "securitest"
+
+redis:
+  host: "redis"
+  # host: "localhost"
+  port: "6379"
+  username: "name"
+  password: "pass"
+  tcpNamespace: tcp_scan
+  tcpJobQueue: requests
+  tcpJobQueueProgressionSub: progression
+
+jwt:
+  secret: "azerty"
+  jwtValidityTime: 15
+
+
+front:
+  host: "localhost"
+  port: "3000"
