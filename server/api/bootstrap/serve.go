@@ -2,12 +2,13 @@ package bootstrap
 
 import (
 	"server/config"
+	db "server/db/sqlc"
 	"server/routing"
 )
 
 func Serve() {
 	config.Set()
-	// db.Connect()
+	db.Connect()
 
 	// fmt.Println("=> serve", config.Server.Port)
 

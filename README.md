@@ -2,6 +2,8 @@
 
 ### backend 
 
+make migrateup:
+
 sqlc generate
 
 1- generate init migration files 

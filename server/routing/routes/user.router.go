@@ -2,9 +2,10 @@ package routes
 
 import (
 	"net/http"
-	controller "server/api/controllers"
+	controllers "server/api/controllers"
 )
 
 func UserRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("POST /user/signup", controller.HandleSignupUser)
+	authController := controllers.NewAuthCtrl()
+	mux.HandleFunc("POST /user/signup", authController.HandleSignupUser)
 }
