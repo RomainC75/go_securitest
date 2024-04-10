@@ -13,7 +13,8 @@ func Serve() {
 
 	// fmt.Println("=> serve", config.Server.Port)
 
-	worker.Init()
+	worker.InitTaskDistributor()
+	go worker.InitTaskProcessor(*db.DbStore)
 
 	routing.Init()
 	routing.RegisterRoutes()

@@ -7,6 +7,12 @@ import (
 	"github.com/hibiken/asynq"
 )
 
+const (
+	CriticalQueue = "critical"
+	DefaultQueue  = "default"
+	LowQueue      = "low"
+)
+
 type TaskProcessor interface {
 	Start() error
 	ProcessTaskSendVerifyEmail(ctx context.Context, task *asynq.Task) error
@@ -17,10 +23,17 @@ type RedisTaskProcessor struct {
 	store  db.Store
 }
 
-func NewRedisTaskProcessor(redisOpt asynq.RedisClusterClientOpt, store db.Store) TaskProcessor {
+func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store) TaskProcessor {
 	server := asynq.NewServer(
 		redisOpt,
-		asynq.Config{},
+		asynq.Config{
+			// accepted queue names !
+			Queues: map[string]int{
+				CriticalQueue: 6,
+				DefaultQueue:  3,
+				LowQueue:      1,
+			},
+		},
 	)
 
 	return &RedisTaskProcessor{
