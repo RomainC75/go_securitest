@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"server/api/controllers/ctrl_utils"
 	"server/api/dto/requests"
 	"server/api/services"
 	"server/worker"
@@ -42,5 +43,5 @@ func (workCtrl *WorkCtrl) HandleWorkTest(w http.ResponseWriter, r *http.Request)
 	}
 
 	// fmt.Println("=> <", req)
-	// json.NewEncoder(w).Encode(createdUser)
+	ctrl_utils.SendJsonResponse(w, http.StatusCreated, map[string]any{"message": "created"})
 }

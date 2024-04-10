@@ -34,3 +34,32 @@ services:
   #   depends_on:
   #     - db
 
+  redis:
+    container_name: "redis"
+    image: redis:alpine
+    # Specify the redis.conf file to use !!
+    # command: redis-server /usr/local/etc/redis/redis.conf
+    # environment:
+    #   REDIS_ARGS: "--requirepass pass --user name on >password ~* allcommands --user default off nopass nocommands"
+    volumes:
+      - ./redis/data:/data #Used for persisting data
+      - ./redis/conf:/usr/local/etc/redis #Used for configuring redis
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+
+  redis-insight:
+    image: redis/redisinsight:latest
+    restart: always
+    ports:
+      - "5540:5540"
+    volumes:
+      - redis-insight:/data
+    depends_on:
+      - redis
+
+  
+
+
+volumes:
+  redis-insight:
