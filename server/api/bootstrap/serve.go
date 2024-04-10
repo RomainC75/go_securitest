@@ -4,6 +4,7 @@ import (
 	"server/config"
 	db "server/db/sqlc"
 	"server/routing"
+	"server/worker"
 )
 
 func Serve() {
@@ -11,6 +12,8 @@ func Serve() {
 	db.Connect()
 
 	// fmt.Println("=> serve", config.Server.Port)
+
+	worker.Init()
 
 	routing.Init()
 	routing.RegisterRoutes()
