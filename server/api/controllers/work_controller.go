@@ -39,9 +39,9 @@ func (workCtrl *WorkCtrl) HandleWorkTest(w http.ResponseWriter, r *http.Request)
 		Username: req.Email,
 	})
 	if err != nil {
-		fmt.Println("ERR : ", err.Error())
+		ctrl_utils.SendJsonResponse(w, http.StatusCreated, ctrl_utils.CtrlResponse{"message": "created"})
 	}
 
 	// fmt.Println("=> <", req)
-	ctrl_utils.SendJsonResponse(w, http.StatusCreated, map[string]any{"message": "created"})
+	ctrl_utils.SendJsonResponse(w, http.StatusCreated, ctrl_utils.CtrlResponse{"message": "created"})
 }

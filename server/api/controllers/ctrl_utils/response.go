@@ -5,6 +5,8 @@ import (
 	"net/http"
 )
 
+type CtrlResponse map[string]any
+
 func SendJsonResponse(w http.ResponseWriter, status uint, response map[string]any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(int(status))
