@@ -10,6 +10,9 @@ import (
 	"server/api/dto/requests"
 	response_dto "server/api/dto/response"
 	"server/api/services"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/rs/zerolog/log"
 )
 
 type AuthCtrl struct {
@@ -31,11 +34,25 @@ func (authCtrl *AuthCtrl) HandleSignupUser(w http.ResponseWriter, r *http.Reques
 	// 	return
 	// }
 
+	// =============
 	if err := json.Unmarshal(reqBody, &req); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		// ctrl_utils.SendErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+
+	validate := validator.New(validator.WithRequiredStructEnabled())
+	err := validate.Struct(req)
+
+	// validationErrors := err.(validator.ValidationErrors)
+	// fmt.Println("errors : ", validationErrors)
+	if err != nil {
+		log.Warn().Str("validate opk", err.Error()).Msg("=>")
+		ctrl_utils.SendErrorResponse(w, http.StatusInternalServerError, err.Error(), ctrl_utils.ValidationErrorType)
+		return
+	}
+	log.Warn().Str("validate opk", "validate ok").Msg("=>")
+	// =============
 
 	ctx := context.Background()
 	createdUser, err := authCtrl.userSrv.CreateUserSrv(ctx, req)

@@ -5,6 +5,13 @@ import (
 	"net/http"
 )
 
+type CustomErrorType string
+
+const (
+	NormalErrorType     CustomErrorType = "error"
+	ValidationErrorType CustomErrorType = "validation_error"
+)
+
 type CtrlResponse map[string]any
 
 type CustomError struct {
@@ -18,13 +25,23 @@ func SendJsonResponse(w http.ResponseWriter, status uint, response map[string]an
 	json.NewEncoder(w).Encode(response)
 }
 
-func SendErrorResponse(w http.ResponseWriter, statusCode int, errorString string) {
+func SendErrorResponse(w http.ResponseWriter, statusCode int, errorString string, customMessage ...CustomErrorType) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
-	encodingError := json.NewEncoder(w).Encode(CustomError{
-		Message: "error",
-		Error:   errorString,
-	})
+
+	var encodingError error
+	if len(customMessage) > 0 {
+		encodingError = json.NewEncoder(w).Encode(CustomError{
+			Message: string(customMessage[0]),
+			Error:   errorString,
+		})
+	} else {
+		encodingError = json.NewEncoder(w).Encode(CustomError{
+			Message: string(NormalErrorType),
+			Error:   errorString,
+		})
+	}
+
 	if encodingError != nil {
 		http.Error(w, encodingError.Error(), http.StatusInternalServerError)
 	}
