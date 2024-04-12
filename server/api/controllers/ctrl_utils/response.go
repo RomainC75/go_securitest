@@ -25,9 +25,9 @@ func SendJsonResponse(w http.ResponseWriter, status uint, response map[string]an
 	json.NewEncoder(w).Encode(response)
 }
 
-func SendErrorResponse(w http.ResponseWriter, statusCode int, errorString string, customMessage ...CustomErrorType) {
+func SendErrorResponse(w http.ResponseWriter, statusCode uint, errorString string, customMessage ...CustomErrorType) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(statusCode)
+	w.WriteHeader(int(statusCode))
 
 	var encodingError error
 	if len(customMessage) > 0 {

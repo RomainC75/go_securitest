@@ -3,15 +3,12 @@ package controllers
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"server/api/controllers/ctrl_utils"
 	"server/api/dto/requests"
 	response_dto "server/api/dto/response"
 	"server/api/services"
-
-	"github.com/rs/zerolog/log"
 )
 
 type AuthCtrl struct {
@@ -25,34 +22,13 @@ func NewAuthCtrl() *AuthCtrl {
 }
 
 func (authCtrl *AuthCtrl) HandleSignupUser(w http.ResponseWriter, r *http.Request) {
-	reqBody, _ := ioutil.ReadAll(r.Body)
-	fmt.Println("boduy : ", reqBody)
+
 	var req requests.SignupRequest
-	// if err := json.NewDecoder(reqBody).Decode(&reqBody); err != nil {
-	// 	http.Error(w, err.Error(), http.StatusBadRequest)
-	// 	return
-	// }
 
-	// =============
-	// if err := json.Unmarshal(reqBody, &req); err != nil {
-	// 	http.Error(w, err.Error(), http.StatusBadRequest)
-	// 	// ctrl_utils.SendErrorResponse(w, http.StatusInternalServerError, err.Error())
-	// 	return
-	// }
-
-	// validate := validator.New(validator.WithRequiredStructEnabled())
-	// err := validate.Struct(req)
-
-	// validationErrors := err.(validator.ValidationErrors)
-	// fmt.Println("errors : ", validationErrors)
-	if err := ctrl_utils.CustomValidator(w, reqBody, &req); err != nil {
-		log.Warn().Str("validate opk", err.Error()).Msg("=>")
-		ctrl_utils.SendErrorResponse(w, http.StatusInternalServerError, err.Error(), ctrl_utils.ValidationErrorType)
+	if err, status := ctrl_utils.CustomValidator(w, r, &req); err != nil {
+		ctrl_utils.SendErrorResponse(w, status, err.Error(), ctrl_utils.ValidationErrorType)
 		return
 	}
-	log.Warn().Str("validate opk", "validate ok").Msg("=>")
-	// =============
-	fmt.Println("trying to get the user ! ", req)
 
 	ctx := context.Background()
 	createdUser, err := authCtrl.userSrv.CreateUserSrv(ctx, req)
