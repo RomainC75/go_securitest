@@ -7,7 +7,8 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-func CustomValidator(w http.ResponseWriter, r *http.Request, target interface{}) (error, uint) {
+func CustomBodyValidator(w http.ResponseWriter, r *http.Request, target interface{}) (error, uint) {
+	// TODO : protect against very big bodys !
 	if err := json.NewDecoder(r.Body).Decode(&target); err != nil {
 		return err, http.StatusBadRequest
 	}

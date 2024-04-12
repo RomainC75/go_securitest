@@ -16,7 +16,7 @@ import (
 )
 
 type WorkCtrl struct {
-	userSrv services.UserSrv
+	userSrv services.AuthSrv
 }
 
 func NewWorkCtrl() *WorkCtrl {

@@ -8,4 +8,5 @@ import (
 func UserRoutes(mux *http.ServeMux) {
 	authController := controllers.NewAuthCtrl()
 	mux.HandleFunc("POST /auth/signup", authController.HandleSignupUser)
+	mux.HandleFunc("POST /auth/login", authController.HandleLoginUser)
 }

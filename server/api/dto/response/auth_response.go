@@ -20,3 +20,9 @@ func UserToSignupResponse(user db.User) SignupResponse {
 		UpdatedAt: user.UpdatedAt,
 	}
 }
+
+type LoginResponse struct {
+	ID    int32  `json:"id"`
+	Email string `json:"email"`
+	Token string `json:"token"`
+}

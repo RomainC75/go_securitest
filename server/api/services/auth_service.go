@@ -5,24 +5,26 @@ import (
 	"errors"
 	"fmt"
 	"server/api/dto/requests"
+	response_dto "server/api/dto/response"
 	"server/api/repositories"
 	db "server/db/sqlc"
 	"server/utils"
+	"server/utils/encrypt"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
-type UserSrv struct {
+type AuthSrv struct {
 	userRepo repositories.UserRepositoryInterface
 }
 
-func NewUserSrv() *UserSrv {
-	return &UserSrv{
+func NewUserSrv() *AuthSrv {
+	return &AuthSrv{
 		userRepo: repositories.NewUserRepo(),
 	}
 }
 
-func (userSrv *UserSrv) CreateUserSrv(ctx context.Context, user requests.SignupRequest) (db.User, error) {
+func (userSrv *AuthSrv) CreateUserSrv(ctx context.Context, user requests.SignupRequest) (db.User, error) {
 	foundUser, err := userSrv.userRepo.FindUserByEmail(ctx, user.Email)
 	fmt.Println("==> found user : ", foundUser, err)
 	if err == nil {
@@ -45,4 +47,28 @@ func (userSrv *UserSrv) CreateUserSrv(ctx context.Context, user requests.SignupR
 		return db.User{}, err
 	}
 	return createdUser, nil
+}
+
+func (userSrv *AuthSrv) LoginSrv(ctx context.Context, user requests.LoginRequest) (response_dto.LoginResponse, error) {
+	foundUser, err := userSrv.userRepo.FindUserByEmail(ctx, user.Email)
+	if err != nil || foundUser.Email == "" {
+		return response_dto.LoginResponse{}, err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(user.Password))
+	if err != nil {
+		return response_dto.LoginResponse{}, err
+	}
+
+	token, err := encrypt.Generate(foundUser)
+	if err != nil {
+		return response_dto.LoginResponse{}, err
+	}
+	response := response_dto.LoginResponse{
+		ID:    foundUser.ID,
+		Email: user.Email,
+		Token: token,
+	}
+
+	return response, nil
 }
