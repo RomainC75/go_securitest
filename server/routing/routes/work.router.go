@@ -3,9 +3,10 @@ package routes
 import (
 	"net/http"
 	controllers "server/api/controllers"
+	mid "server/api/middlewares"
 )
 
 func WorkRoutes(mux *http.ServeMux) {
 	workController := controllers.NewWorkCtrl()
-	mux.HandleFunc("POST /work", workController.HandleWorkTest)
+	mux.Handle("POST /work", mid.IsAuth(http.HandlerFunc(workController.HandleWorkTest), false))
 }
