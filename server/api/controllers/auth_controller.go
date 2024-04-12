@@ -11,7 +11,6 @@ import (
 	response_dto "server/api/dto/response"
 	"server/api/services"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/rs/zerolog/log"
 )
 
@@ -35,24 +34,25 @@ func (authCtrl *AuthCtrl) HandleSignupUser(w http.ResponseWriter, r *http.Reques
 	// }
 
 	// =============
-	if err := json.Unmarshal(reqBody, &req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		// ctrl_utils.SendErrorResponse(w, http.StatusInternalServerError, err.Error())
-		return
-	}
+	// if err := json.Unmarshal(reqBody, &req); err != nil {
+	// 	http.Error(w, err.Error(), http.StatusBadRequest)
+	// 	// ctrl_utils.SendErrorResponse(w, http.StatusInternalServerError, err.Error())
+	// 	return
+	// }
 
-	validate := validator.New(validator.WithRequiredStructEnabled())
-	err := validate.Struct(req)
+	// validate := validator.New(validator.WithRequiredStructEnabled())
+	// err := validate.Struct(req)
 
 	// validationErrors := err.(validator.ValidationErrors)
 	// fmt.Println("errors : ", validationErrors)
-	if err != nil {
+	if err := ctrl_utils.CustomValidator(w, reqBody, &req); err != nil {
 		log.Warn().Str("validate opk", err.Error()).Msg("=>")
 		ctrl_utils.SendErrorResponse(w, http.StatusInternalServerError, err.Error(), ctrl_utils.ValidationErrorType)
 		return
 	}
 	log.Warn().Str("validate opk", "validate ok").Msg("=>")
 	// =============
+	fmt.Println("trying to get the user ! ", req)
 
 	ctx := context.Background()
 	createdUser, err := authCtrl.userSrv.CreateUserSrv(ctx, req)
