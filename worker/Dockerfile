@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM golang:1.21.0-bookworm
+FROM golang:1.22.2-bookworm
 
 RUN --mount=type=cache,target=/var/cache/apt \
     apt-get update && apt-get install -y build-essential
@@ -15,4 +15,4 @@ RUN go mod download
 # RUN go run main.go
 COPY . .
 
-CMD ["go", "run", "main.go", "serve"]
+CMD ["go", "run", "main.go"]

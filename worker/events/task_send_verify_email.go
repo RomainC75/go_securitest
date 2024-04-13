@@ -1,4 +1,4 @@
-package pubsub
+package events
 
 import (
 	"context"
@@ -33,7 +33,7 @@ func (distributor *RedisTaskDistributor) DistributeTaskSendVerifyEmail(
 	}
 
 	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).
-		Str("queue", info.Queue).Int("max_retry", info.MaxRetry).Msg("enqueued task")
+		Str("queue", info.Queue).Int("max_retry", info.MaxRetry).Msg("ENQUEUED task")
 
 	return nil
 }
@@ -52,7 +52,8 @@ func (processor *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Cont
 		return fmt.Errorf("failed to get user: %w", err)
 	}
 	// TODO: send email to user
+	fmt.Println("===> NEW TASK : ")
 	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).
-		Str("email", user.Email).Msg("processed task")
+		Str("email", user.Email).Msg("PROCESSED task")
 	return nil
 }

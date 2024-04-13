@@ -9,7 +9,7 @@ import (
 	"server/api/controllers/ctrl_utils"
 	"server/api/dto/requests"
 	"server/api/services"
-	"server/worker"
+	"server/events"
 	"time"
 
 	"github.com/hibiken/asynq"
@@ -37,14 +37,14 @@ func (workCtrl *WorkCtrl) HandleWorkTest(w http.ResponseWriter, r *http.Request)
 
 	ctx := context.Background()
 	// createdUser, err := workCtrl.userSrv.CreateUserSrv(ctx, req)
-	distributor := worker.Get()
+	distributor := events.Get()
 	opts := []asynq.Option{
 		asynq.MaxRetry(10),
 		asynq.ProcessIn(10 * time.Second),
 		// send to other queue :-)
-		asynq.Queue(worker.CriticalQueue),
+		asynq.Queue(events.CriticalQueue),
 	}
-	err = distributor.DistributeTaskSendVerifyEmail(ctx, &worker.PayloadSendVerifyEmail{
+	err = distributor.DistributeTaskSendVerifyEmail(ctx, &events.PayloadSendVerifyEmail{
 		Username: req.Email,
 	}, opts...)
 	if err != nil {

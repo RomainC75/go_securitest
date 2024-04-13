@@ -3,8 +3,8 @@ package bootstrap
 import (
 	"server/config"
 	db "server/db/sqlc"
+	"server/events"
 	"server/routing"
-	"server/worker"
 )
 
 func Serve() {
@@ -13,8 +13,8 @@ func Serve() {
 
 	// fmt.Println("=> serve", config.Server.Port)
 
-	worker.InitTaskDistributor()
-	go worker.InitTaskProcessor(*db.DbStore)
+	events.InitTaskDistributor()
+	go events.InitTaskProcessor(*db.DbStore)
 
 	routing.Init()
 	routing.RegisterRoutes()
