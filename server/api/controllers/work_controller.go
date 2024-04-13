@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"server/api/controllers/ctrl_utils"
-	requests_dto "server/api/dto/requests"
+	request_dto "server/api/dto/request"
 	"server/api/services"
 	"shared/events"
 	"time"
@@ -27,7 +27,7 @@ func NewWorkCtrl() *WorkCtrl {
 
 func (workCtrl *WorkCtrl) HandleWorkTest(w http.ResponseWriter, r *http.Request) {
 	reqBody, _ := ioutil.ReadAll(r.Body)
-	var req requests_dto.SignupRequest
+	var req request_dto.SignupRequest
 	err := json.Unmarshal(reqBody, &req)
 	if err != nil {
 		json.NewEncoder(w).Encode("error ! ")

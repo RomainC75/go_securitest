@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 	"server/api/controllers/ctrl_utils"
-	requests_dto "server/api/dto/requests"
+	request_dto "server/api/dto/request"
 	response_dto "server/api/dto/response"
 	"server/api/services"
 )
@@ -20,7 +20,7 @@ func NewAuthCtrl() *AuthCtrl {
 }
 
 func (authCtrl *AuthCtrl) HandleSignupUser(w http.ResponseWriter, r *http.Request) {
-	var reqBody requests_dto.SignupRequest
+	var reqBody request_dto.SignupRequest
 	if err, status := ctrl_utils.CustomBodyValidator(w, r, &reqBody); err != nil {
 		ctrl_utils.SendErrorResponse(w, status, err.Error(), ctrl_utils.ValidationErrorType)
 		return
@@ -38,7 +38,7 @@ func (authCtrl *AuthCtrl) HandleSignupUser(w http.ResponseWriter, r *http.Reques
 }
 
 func (authCtrl *AuthCtrl) HandleLoginUser(w http.ResponseWriter, r *http.Request) {
-	var reqBody requests_dto.LoginRequest
+	var reqBody request_dto.LoginRequest
 	if err, status := ctrl_utils.CustomBodyValidator(w, r, &reqBody); err != nil {
 		ctrl_utils.SendErrorResponse(w, status, err.Error(), ctrl_utils.ValidationErrorType)
 		return

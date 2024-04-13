@@ -2,12 +2,12 @@ package services
 
 import (
 	"context"
-	requests_dto "server/api/dto/requests"
+	request_dto "server/api/dto/request"
 	response_dto "server/api/dto/response"
 	db "shared/db/sqlc"
 )
 
 type UserServiceInterface interface {
-	CreateUserSrv(ctx context.Context, user requests_dto.SignupRequest) (db.User, error)
-	LoginSrv(ctx context.Context, user requests_dto.LoginRequest) (response_dto.LoginResponse, error)
+	CreateUserSrv(ctx context.Context, user request_dto.SignupRequest) (db.User, error)
+	LoginSrv(ctx context.Context, user request_dto.LoginRequest) (response_dto.LoginResponse, error)
 }
