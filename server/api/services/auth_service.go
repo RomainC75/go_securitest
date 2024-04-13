@@ -7,9 +7,9 @@ import (
 	"server/api/dto/requests"
 	response_dto "server/api/dto/response"
 	"server/api/repositories"
-	db "server/db/sqlc"
 	"server/utils"
 	"server/utils/encrypt"
+	db "shared/db/sqlc"
 
 	"golang.org/x/crypto/bcrypt"
 )

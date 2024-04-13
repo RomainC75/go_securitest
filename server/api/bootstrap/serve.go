@@ -1,10 +1,10 @@
 package bootstrap
 
 import (
-	"server/config"
-	db "server/db/sqlc"
-	"server/events"
 	"server/routing"
+	"shared/config"
+	db "shared/db/sqlc"
+	"shared/events"
 )
 
 func Serve() {
@@ -14,7 +14,7 @@ func Serve() {
 	// fmt.Println("=> serve", config.Server.Port)
 
 	events.InitTaskDistributor()
-	go events.InitTaskProcessor(*db.DbStore)
+	// go events.InitTaskProcessor(*db.DbStore)
 
 	routing.Init()
 	routing.RegisterRoutes()

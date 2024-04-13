@@ -9,7 +9,7 @@ import (
 	"server/api/controllers/ctrl_utils"
 	"server/api/dto/requests"
 	"server/api/services"
-	"server/events"
+	"shared/events"
 	"time"
 
 	"github.com/hibiken/asynq"

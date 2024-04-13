@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"server/config"
-	db "server/db/sqlc"
+	"shared/config"
+	db "shared/db/sqlc"
 
 	"github.com/golang-jwt/jwt/v4"
 )

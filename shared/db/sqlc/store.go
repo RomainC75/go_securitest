@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"server/config"
+	"shared/config"
 
 	_ "github.com/lib/pq"
 )

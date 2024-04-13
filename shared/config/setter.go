@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/spf13/viper"
@@ -9,9 +10,11 @@ import (
 func Set() {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath("config")
+
+	viper.AddConfigPath("../shared/config")
 
 	if err := viper.ReadInConfig(); err != nil {
+		fmt.Println("err : ", err.Error())
 		log.Fatal("error reading config")
 	}
 

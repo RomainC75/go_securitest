@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"server/config"
+	"shared/config"
 	"syscall"
 	"time"
 )

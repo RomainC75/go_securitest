@@ -2,8 +2,8 @@ package events
 
 import (
 	"fmt"
-	"server/config"
-	db "server/db/sqlc"
+	"shared/config"
+	db "shared/db/sqlc"
 
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog/log"

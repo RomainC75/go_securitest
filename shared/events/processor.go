@@ -2,7 +2,7 @@ package events
 
 import (
 	"context"
-	db "server/db/sqlc"
+	db "shared/db/sqlc"
 
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog/log"

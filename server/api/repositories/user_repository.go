@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"context"
-	db "server/db/sqlc"
+	db "shared/db/sqlc"
 	"time"
 )
 
