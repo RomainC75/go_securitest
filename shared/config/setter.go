@@ -10,7 +10,6 @@ import (
 func Set() {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
-
 	viper.AddConfigPath("../shared/config")
 
 	if err := viper.ReadInConfig(); err != nil {
@@ -22,5 +21,5 @@ func Set() {
 	if err != nil {
 		log.Fatal("unable to decode into struct")
 	}
-
+	fmt.Println("=> configurations : ", configurations)
 }

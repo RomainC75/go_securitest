@@ -1,6 +1,7 @@
 package main
 
 import (
+	"shared/config"
 	db "shared/db/sqlc"
 	"shared/events"
 	"sync"
@@ -11,8 +12,8 @@ import (
 // }
 
 func main() {
+	config.Set()
 	db.Connect()
-
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go events.InitTaskProcessor(*db.DbStore)
