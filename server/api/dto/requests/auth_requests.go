@@ -1,4 +1,4 @@
-package requests
+package requests_dto
 
 type SignupRequest struct {
 	LoginRequest

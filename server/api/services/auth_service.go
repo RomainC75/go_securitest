@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"server/api/dto/requests"
+	requests_dto "server/api/dto/requests"
 	response_dto "server/api/dto/response"
 	"server/api/repositories"
 	"server/utils"
@@ -24,7 +24,7 @@ func NewUserSrv() *AuthSrv {
 	}
 }
 
-func (userSrv *AuthSrv) CreateUserSrv(ctx context.Context, user requests.SignupRequest) (db.User, error) {
+func (userSrv *AuthSrv) CreateUserSrv(ctx context.Context, user requests_dto.SignupRequest) (db.User, error) {
 	foundUser, err := userSrv.userRepo.FindUserByEmail(ctx, user.Email)
 	fmt.Println("==> found user : ", foundUser, err)
 	if err == nil {
@@ -49,7 +49,7 @@ func (userSrv *AuthSrv) CreateUserSrv(ctx context.Context, user requests.SignupR
 	return createdUser, nil
 }
 
-func (userSrv *AuthSrv) LoginSrv(ctx context.Context, user requests.LoginRequest) (response_dto.LoginResponse, error) {
+func (userSrv *AuthSrv) LoginSrv(ctx context.Context, user requests_dto.LoginRequest) (response_dto.LoginResponse, error) {
 	foundUser, err := userSrv.userRepo.FindUserByEmail(ctx, user.Email)
 	if err != nil || foundUser.Email == "" {
 		return response_dto.LoginResponse{}, err
