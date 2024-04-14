@@ -9,8 +9,12 @@ type NetworkDiscover struct {
 	Range IpRange `json:"ip_range" validate:"required"`
 }
 
-type PortTestScenario struct {
+type FullPortTestScenario struct {
 	ScenarioBase
+	PortTestScenario PortTestScenario `json:"scenario" validate:"required"`
+}
+
+type PortTestScenario struct {
 	Range IpRange `json:"ip_range" validate:"required"`
 }
 

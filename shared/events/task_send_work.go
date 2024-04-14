@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	request_dto "server/api/dto/request"
 
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog/log"
@@ -16,9 +17,9 @@ type PayloadSendVerifyEmail struct {
 	Username string `json:"username"`
 }
 
-func (distributor *RedisTaskDistributor) DistributeTaskSendVerifyEmail(
+func (distributor *RedisTaskDistributor) DistributeTaskSendWork(
 	ctx context.Context,
-	payload *PayloadSendVerifyEmail,
+	payload *request_dto.PortTestScenario,
 	opts ...asynq.Option,
 ) error {
 	jsonPayload, err := json.Marshal(payload)

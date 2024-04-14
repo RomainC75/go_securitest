@@ -2,14 +2,15 @@ package events
 
 import (
 	"context"
+	request_dto "server/api/dto/request"
 
 	"github.com/hibiken/asynq"
 )
 
 type TaskDistributor interface {
-	DistributeTaskSendVerifyEmail(
+	DistributeTaskSendWork(
 		ctx context.Context,
-		payload *PayloadSendVerifyEmail,
+		payload *request_dto.PortTestScenario,
 		opts ...asynq.Option,
 	) error
 }
