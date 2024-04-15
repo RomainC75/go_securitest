@@ -8,7 +8,6 @@ import (
 	request_dto "server/api/dto/request"
 	"server/api/services"
 	"shared/events"
-	"time"
 
 	"github.com/hibiken/asynq"
 )
@@ -40,8 +39,8 @@ func (workCtrl *WorkCtrl) HandleWorkTest(w http.ResponseWriter, r *http.Request)
 		distributor := events.Get()
 		opts := []asynq.Option{
 			asynq.MaxRetry(10),
-			asynq.ProcessIn(10 * time.Second),
-			// send to other queue :-)
+			// asynq.ProcessIn(time.Second),
+			// + send to other queue :-)
 			asynq.Queue(events.CriticalQueue),
 		}
 
