@@ -11,10 +11,6 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// func runTaskProcessor(redisOpt asynq.RedisClientOpt, store){
-
-// }
-
 func main() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	config.Set()
