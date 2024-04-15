@@ -11,7 +11,11 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-const TaskSendVerifyEmail = "task:send_verify_email"
+type ScenarioSelector string
+
+const (
+	PortScanner ScenarioSelector = "task:port_scanner"
+)
 
 type PayloadSendVerifyEmail struct {
 	Username string `json:"username"`
@@ -20,6 +24,7 @@ type PayloadSendVerifyEmail struct {
 func (distributor *RedisTaskDistributor) DistributeTaskSendWork(
 	ctx context.Context,
 	payload *request_dto.PortTestScenario,
+	scenario ScenarioSelector,
 	opts ...asynq.Option,
 ) error {
 	jsonPayload, err := json.Marshal(payload)
@@ -27,7 +32,7 @@ func (distributor *RedisTaskDistributor) DistributeTaskSendWork(
 		return fmt.Errorf("faild to marshal payload: %w", err)
 	}
 
-	task := asynq.NewTask(TaskSendVerifyEmail, jsonPayload, opts...)
+	task := asynq.NewTask(string(PortScanner), jsonPayload, opts...)
 	info, err := distributor.client.EnqueueContext(ctx, task)
 	if err != nil {
 		return fmt.Errorf("fails to enqueue task : %w", err)
@@ -39,7 +44,7 @@ func (distributor *RedisTaskDistributor) DistributeTaskSendWork(
 	return nil
 }
 
-func (processor *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Context, task *asynq.Task) error {
+func (processor *RedisTaskProcessor) ProcessPortScanner(ctx context.Context, task *asynq.Task) error {
 	var payload PayloadSendVerifyEmail
 	if err := json.Unmarshal(task.Payload(), &payload); err != nil {
 		return fmt.Errorf("failed to unmarshal payload : %w", asynq.SkipRetry)

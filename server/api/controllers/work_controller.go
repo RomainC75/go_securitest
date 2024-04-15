@@ -47,6 +47,7 @@ func (workCtrl *WorkCtrl) HandleWorkTest(w http.ResponseWriter, r *http.Request)
 		err := distributor.DistributeTaskSendWork(
 			ctx,
 			&portTestScenario.PortTestScenario,
+			events.PortScanner,
 			opts...,
 		)
 		if err != nil {

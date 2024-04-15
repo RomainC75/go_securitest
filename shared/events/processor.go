@@ -16,7 +16,7 @@ const (
 
 type TaskProcessor interface {
 	Start() error
-	ProcessTaskSendVerifyEmail(ctx context.Context, task *asynq.Task) error
+	ProcessPortScanner(ctx context.Context, task *asynq.Task) error
 }
 
 type RedisTaskProcessor struct {
@@ -50,7 +50,7 @@ func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store) TaskPr
 
 func (processor *RedisTaskProcessor) Start() error {
 	asynqMux := asynq.NewServeMux()
-	asynqMux.HandleFunc(TaskSendVerifyEmail, processor.ProcessTaskSendVerifyEmail)
+	asynqMux.HandleFunc(string(PortScanner), processor.ProcessPortScanner)
 
 	return processor.server.Start(asynqMux)
 }
