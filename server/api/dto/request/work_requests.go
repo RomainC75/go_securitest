@@ -15,10 +15,16 @@ type FullPortTestScenario struct {
 }
 
 type PortTestScenario struct {
-	Range IpRange `json:"ip_range" validate:"required"`
+	IPRange IpRange `json:"ip_range" validate:"required"`
+	Range   Range   `json:"range" validate:"required"`
 }
 
 type IpRange struct {
 	IpMin string `json:"ip_min" validate:"required,ip"`
 	IpMax string `json:"ip_max" validate:"required,ip"`
+}
+
+type Range struct {
+	Min int `json:"min" validate:"required"`
+	Max int `json:"max" validate:"required"`
 }
