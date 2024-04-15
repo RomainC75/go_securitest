@@ -1,10 +1,14 @@
 package main
 
 import (
+	"os"
 	"shared/config"
 	db "shared/db/sqlc"
 	"shared/events"
 	"sync"
+
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 )
 
 // func runTaskProcessor(redisOpt asynq.RedisClientOpt, store){
@@ -12,6 +16,7 @@ import (
 // }
 
 func main() {
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	config.Set()
 	db.Connect()
 	var wg sync.WaitGroup

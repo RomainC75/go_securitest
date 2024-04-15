@@ -1,6 +1,7 @@
 package scenarios
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net"
@@ -9,8 +10,8 @@ import (
 )
 
 type ScanResult struct {
-	address string
-	ports   []PortResponse
+	address string         `json:"address"`
+	ports   []PortResponse `json:"ports"`
 }
 
 type PortResponse struct {
@@ -18,8 +19,20 @@ type PortResponse struct {
 	isOpen bool
 }
 
+func GetString(result ScanResult) string {
+	openPorts := []PortResponse{}
+	for _, pRes := range result.ports {
+		if pRes.isOpen {
+			openPorts = append(openPorts, pRes)
+		}
+	}
+	result.ports = openPorts
+	res, _ := json.Marshal(result)
+	return string(res)
+}
+
 func Scan(address string, portMin int, portMax int) (ScanResult, error) {
-	if portMin > portMax {
+	if portMax < portMin {
 		return ScanResult{}, errors.New("portRange min > max")
 	}
 	portResponses := []PortResponse{}
@@ -30,6 +43,7 @@ func Scan(address string, portMin int, portMax int) (ScanResult, error) {
 	goMerger(&portResponses, resultChan, done)
 
 	for i := portMin; i <= portMax; i++ {
+		fmt.Println("=>", i)
 		wg.Add(1)
 		goScanUnit(address, i, resultChan, &wg)
 	}
@@ -49,6 +63,7 @@ func goMerger(portResponses *[]PortResponse, resultChan chan PortResponse, done 
 			case <-done:
 				return
 			case response := <-resultChan:
+				fmt.Println("res : ", response.isOpen, response.num)
 				*portResponses = append(*portResponses, response)
 			}
 		}

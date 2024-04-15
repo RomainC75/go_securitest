@@ -2,10 +2,10 @@ package events
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	request_dto "server/api/dto/request"
+	"shared/scenarios"
 
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog/log"
@@ -45,21 +45,23 @@ func (distributor *RedisTaskDistributor) DistributeTaskSendWork(
 }
 
 func (processor *RedisTaskProcessor) ProcessPortScanner(ctx context.Context, task *asynq.Task) error {
-	var payload PayloadSendVerifyEmail
+	var payload request_dto.PortTestScenario
 	if err := json.Unmarshal(task.Payload(), &payload); err != nil {
 		return fmt.Errorf("failed to unmarshal payload : %w", asynq.SkipRetry)
 	}
+	targetIp := payload.IPRange.IpMin
+	// user, err := processor.store.GetUserByEmail(ctx, payload.Username)
 
-	user, err := processor.store.GetUserByEmail(ctx, payload.Username)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return fmt.Errorf("user doesn't exist: %w", asynq.SkipRetry)
-		}
-		return fmt.Errorf("failed to get user: %w", err)
-	}
 	// TODO: send email to user
-	fmt.Println("===> NEW TASK : ")
+
+	result, err := scenarios.Scan(targetIp, payload.PortRange.Min, payload.PortRange.Max)
+	fmt.Printf("===========FINISHED ================")
+	if err != nil {
+		log.Error().Str("scenario Error : ", err.Error())
+	}
+	log.Warn().Str("=====> scenario Ress : ", scenarios.GetString(result))
+	fmt.Println("===> DONE TASKS : ", scenarios.GetString(result))
 	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).
-		Str("email", user.Email).Msg("PROCESSED task")
+		Str("targetIp", targetIp).Msg("PROCESSED task")
 	return nil
 }

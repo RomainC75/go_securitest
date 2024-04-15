@@ -15,8 +15,8 @@ type FullPortTestScenario struct {
 }
 
 type PortTestScenario struct {
-	IPRange IpRange `json:"ip_range" validate:"required"`
-	Range   Range   `json:"range" validate:"required"`
+	IPRange   IpRange `json:"ip_range" validate:"required"`
+	PortRange Range   `json:"range" validate:"required"`
 }
 
 type IpRange struct {
