@@ -17,6 +17,6 @@ func main() {
 	db.Connect()
 	var wg sync.WaitGroup
 	wg.Add(1)
-	go events.InitTaskProcessor(*db.DbStore)
+	go events.InitTaskProcessor(*db.DbStore, true)
 	wg.Wait()
 }
