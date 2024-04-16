@@ -10,25 +10,28 @@ import (
 )
 
 type ScanResult struct {
-	address string         `json:"address"`
-	ports   []PortResponse `json:"ports"`
+	Address string         `json:"address"`
+	Ports   []PortResponse `json:"ports"`
 }
 
 type PortResponse struct {
-	num    int
-	isOpen bool
+	Num    int  `json:"num"`
+	IsOpen bool `json:"is_open"`
 }
 
-func GetString(result ScanResult) string {
+func GetString(result ScanResult) ([]byte, error) {
 	openPorts := []PortResponse{}
-	for _, pRes := range result.ports {
-		if pRes.isOpen {
+	for _, pRes := range result.Ports {
+		if pRes.IsOpen {
 			openPorts = append(openPorts, pRes)
 		}
 	}
-	result.ports = openPorts
-	res, _ := json.Marshal(result)
-	return string(res)
+	result.Ports = openPorts
+	res, err := json.Marshal(result)
+	if err != nil {
+		return []byte{}, err
+	}
+	return res, nil
 }
 
 func Scan(address string, portMin int, portMax int) (ScanResult, error) {
@@ -51,8 +54,8 @@ func Scan(address string, portMin int, portMax int) (ScanResult, error) {
 	wg.Wait()
 	done <- 1
 	return ScanResult{
-		address: address,
-		ports:   portResponses,
+		Address: address,
+		Ports:   portResponses,
 	}, nil
 }
 
@@ -63,8 +66,10 @@ func goMerger(portResponses *[]PortResponse, resultChan chan PortResponse, done 
 			case <-done:
 				return
 			case response := <-resultChan:
-				fmt.Println("res : ", response.isOpen, response.num)
-				*portResponses = append(*portResponses, response)
+				// fmt.Println("res : ", response.IsOpen, response.Num)
+				if response.IsOpen {
+					*portResponses = append(*portResponses, response)
+				}
 			}
 		}
 	}()
@@ -78,11 +83,11 @@ func goScanUnit(address string, i int, resultChan chan PortResponse, wg *sync.Wa
 		d := net.Dialer{Timeout: time.Second * 4}
 		_, err := d.Dial("tcp", address)
 		portResp := PortResponse{
-			num: port,
+			Num: port,
 		}
 		if err == nil {
 			fmt.Printf("==> ", port)
-			portResp.isOpen = true
+			portResp.IsOpen = true
 		}
 		resultChan <- portResp
 	}()

@@ -15,7 +15,7 @@ const (
 )
 
 type TaskProcessor interface {
-	Start() error
+	Start(isWorker bool) error
 	ProcessPortScanner(ctx context.Context, task *asynq.Task) error
 }
 
@@ -48,9 +48,14 @@ func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store) TaskPr
 	}
 }
 
-func (processor *RedisTaskProcessor) Start() error {
+func (processor *RedisTaskProcessor) Start(isWorker bool) error {
+	InitTaskDistributor()
 	asynqMux := asynq.NewServeMux()
-	asynqMux.HandleFunc(string(PortScanner), processor.ProcessPortScanner)
+	if isWorker {
+		asynqMux.HandleFunc(string(PortScanner), processor.ProcessPortScanner)
+	} else {
+		asynqMux.HandleFunc(string(ScannerResult), processor.ProcessPortScannerResponse)
+	}
 
 	return processor.server.Start(asynqMux)
 }

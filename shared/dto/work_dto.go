@@ -1,4 +1,4 @@
-package request_dto
+package work_dto
 
 type ScenarioBase struct {
 	BasicData string `json:"basic_data" validate:"required"`
@@ -20,7 +20,7 @@ type PortTestScenario struct {
 }
 
 type IpRange struct {
-	IpMin string `json:"ip_min" validate:"required,ip"`
+	IpMin string `json:"ip_min" validate:"required"`
 	IpMax string `json:"ip_max" validate:"required,ip"`
 }
 

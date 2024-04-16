@@ -2,7 +2,8 @@ package events
 
 import (
 	"context"
-	request_dto "server/api/dto/request"
+	work_dto "shared/dto"
+	"shared/scenarios"
 
 	"github.com/hibiken/asynq"
 )
@@ -10,7 +11,13 @@ import (
 type TaskDistributor interface {
 	DistributeTaskSendWork(
 		ctx context.Context,
-		payload *request_dto.PortTestScenario,
+		payload *work_dto.PortTestScenario,
+		scenario ScenarioSelector,
+		opts ...asynq.Option,
+	) error
+	DistributeTaskSendWorkBack(
+		ctx context.Context,
+		payload *scenarios.ScanResult,
 		scenario ScenarioSelector,
 		opts ...asynq.Option,
 	) error

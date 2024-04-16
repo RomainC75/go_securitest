@@ -14,7 +14,7 @@ func Serve() {
 	// fmt.Println("=> serve", config.Server.Port)
 
 	events.InitTaskDistributor()
-	// go events.InitTaskProcessor(*db.DbStore)
+	go events.InitTaskProcessor(*db.DbStore, false)
 
 	routing.Init()
 	routing.RegisterRoutes()

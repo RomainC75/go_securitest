@@ -21,7 +21,7 @@ func InitTaskDistributor() {
 	taskDistributor = NewRedisTaskDistributor(redisOpt)
 }
 
-func InitTaskProcessor(store db.Store) {
+func InitTaskProcessor(store db.Store, isWorker bool) {
 	// supposed to run as a go routine
 	config := config.Get()
 	redisOpt := asynq.RedisClientOpt{
@@ -29,7 +29,7 @@ func InitTaskProcessor(store db.Store) {
 	}
 	taskProcessor := NewRedisTaskProcessor(redisOpt, store)
 	log.Info().Msg("start task processor")
-	err := taskProcessor.Start()
+	err := taskProcessor.Start(isWorker)
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to start task processor")
 	}

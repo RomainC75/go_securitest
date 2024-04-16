@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"server/api/controllers/ctrl_utils"
-	request_dto "server/api/dto/request"
 	"server/api/services"
+	work_dto "shared/dto"
 	"shared/events"
 
 	"github.com/hibiken/asynq"
@@ -28,7 +28,7 @@ func (workCtrl *WorkCtrl) HandleWorkTest(w http.ResponseWriter, r *http.Request)
 
 	switch workCode {
 	case "1":
-		var portTestScenario request_dto.FullPortTestScenario
+		var portTestScenario work_dto.FullPortTestScenario
 		if err, status := ctrl_utils.CustomBodyValidator(w, r, &portTestScenario); err != nil {
 			ctrl_utils.SendErrorResponse(w, status, err.Error(), ctrl_utils.ValidationErrorType)
 			return
