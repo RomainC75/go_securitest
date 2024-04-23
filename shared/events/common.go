@@ -27,7 +27,7 @@ func InitTaskProcessor(store db.Store, isWorker bool) {
 	redisOpt := asynq.RedisClientOpt{
 		Addr: fmt.Sprintf("%s:%s", config.Redis.Host, config.Redis.Port),
 	}
-	taskProcessor := NewRedisTaskProcessor(redisOpt, store)
+	taskProcessor := NewRedisTaskProcessor(redisOpt, store, isWorker)
 	log.Info().Msg("start task processor")
 	err := taskProcessor.Start(isWorker)
 	if err != nil {
