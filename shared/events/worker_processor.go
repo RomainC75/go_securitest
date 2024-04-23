@@ -36,7 +36,7 @@ func (processor *RedisTaskProcessor) ProcessPortScanner(ctx context.Context, tas
 		asynq.MaxRetry(10),
 		// asynq.ProcessIn(time.Second),
 		// + send to other queue :-)
-		asynq.Queue(CriticalQueue),
+		asynq.Queue(string(CriticalQueueReq)),
 	}
 	fmt.Println("====> distributor : ", distributor)
 	err = distributor.DistributeTaskSendWorkBack(

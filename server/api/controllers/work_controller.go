@@ -41,7 +41,7 @@ func (workCtrl *WorkCtrl) HandleWorkTest(w http.ResponseWriter, r *http.Request)
 			asynq.MaxRetry(10),
 			// asynq.ProcessIn(time.Second),
 			// + send to other queue :-)
-			asynq.Queue(events.CriticalQueue),
+			asynq.Queue(string(events.CriticalQueueReq)),
 		}
 
 		err := distributor.DistributeTaskSendWork(
