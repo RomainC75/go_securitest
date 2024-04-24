@@ -16,13 +16,11 @@ func (distributor *RedisTaskDistributor) DistributeTaskSendWorkBack(
 	scenario ScenarioSelector,
 	opts ...asynq.Option,
 ) error {
-	fmt.Println("=====>DISTRIBUTE BACK")
 	jsonPayload, err := json.Marshal(payload)
 	if err != nil {
-		return fmt.Errorf("faild to marshal payload: %w", err)
+		return fmt.Errorf("fails to marshal payload: %w", err)
 	}
 
-	fmt.Println("222222222222222222222222")
 	task := asynq.NewTask(string(ScannerResult), jsonPayload, opts...)
 	info, err := distributor.client.EnqueueContext(ctx, task)
 	if err != nil {

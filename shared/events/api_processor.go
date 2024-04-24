@@ -21,8 +21,6 @@ func (processor *RedisTaskProcessor) ProcessPortScannerResponse(ctx context.Cont
 
 	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).
 		Str("targetIp", "lkj").Msg("PROCESSED task")
-	fmt.Println("==> RESPONSE worker => api")
-	//============================================
 
 	return nil
 }
