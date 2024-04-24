@@ -30,6 +30,7 @@ func (processor *RedisTaskProcessor) ProcessPortScannerResponse(ctx context.Cont
 
 	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).
 		Str("targetIp", targetIp).Msg("PROCESSED task")
+	fmt.Println("==> RESPONSE worker => api")
 	//============================================
 	distributor := Get()
 	opts := []asynq.Option{
