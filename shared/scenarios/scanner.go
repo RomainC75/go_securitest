@@ -11,6 +11,7 @@ import (
 
 type ScanResult struct {
 	Address string         `json:"address"`
+	Date    time.Time      `json:"date"`
 	Ports   []PortResponse `json:"ports"`
 }
 
@@ -55,6 +56,7 @@ func Scan(address string, portMin int, portMax int) (ScanResult, error) {
 	done <- 1
 	return ScanResult{
 		Address: address,
+		Date:    time.Now(),
 		Ports:   portResponses,
 	}, nil
 }
