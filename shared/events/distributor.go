@@ -18,6 +18,7 @@ type TaskDistributor interface {
 	DistributeTaskSendWorkBack(
 		ctx context.Context,
 		payload *scenarios.ScanResult,
+		originalPayload *work_dto.PortTestScenario,
 		scenario ScenarioSelector,
 		opts ...asynq.Option,
 	) error

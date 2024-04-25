@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"server/event_logic"
 	"server/utils"
 	"shared/scenarios"
 
@@ -21,6 +22,8 @@ func (processor *RedisTaskProcessor) ProcessPortScannerResponse(ctx context.Cont
 
 	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).
 		Str("targetIp", "lkj").Msg("PROCESSED task")
+
+	event_logic.HandleScanResponse(payload)
 
 	return nil
 }

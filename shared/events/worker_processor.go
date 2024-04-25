@@ -12,23 +12,23 @@ import (
 )
 
 func (processor *RedisTaskProcessor) ProcessPortScanner(ctx context.Context, task *asynq.Task) error {
-	var payload work_dto.PortTestScenario
-	if err := json.Unmarshal(task.Payload(), &payload); err != nil {
-		return fmt.Errorf("failed to unmarshal payload : %w", asynq.SkipRetry)
+	var originalPayload work_dto.PortTestScenario
+	if err := json.Unmarshal(task.Payload(), &originalPayload); err != nil {
+		return fmt.Errorf("failed to unmarshal originalPayload : %w", asynq.SkipRetry)
 	}
-	targetIp := payload.IPRange.IpMin
-	// user, err := processor.store.GetUserByEmail(ctx, payload.Username)
+	targetIp := originalPayload.IPRange.IpMin
+	// user, err := processor.store.GetUserByEmail(ctx, originalPayload.Username)
 
 	// TODO: send email to user
 
-	result, err := scenarios.Scan(targetIp, payload.PortRange.Min, payload.PortRange.Max)
+	result, err := scenarios.Scan(targetIp, originalPayload.PortRange.Min, originalPayload.PortRange.Max)
 	fmt.Printf("===========FINISHED ================")
 	if err != nil {
 		log.Error().Str("scenario Error : ", err.Error())
 	}
 	// strResult, err := scenarios.GetString(result)
 
-	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).
+	log.Info().Str("type", task.Type()).Bytes("originalPayload", task.Payload()).
 		Str("targetIp", targetIp).Msg("PROCESSED task")
 	//============================================
 	distributor := Get()
@@ -42,6 +42,7 @@ func (processor *RedisTaskProcessor) ProcessPortScanner(ctx context.Context, tas
 	err = distributor.DistributeTaskSendWorkBack(
 		ctx,
 		&result,
+		&originalPayload,
 		PortScanner,
 		opts...,
 	)

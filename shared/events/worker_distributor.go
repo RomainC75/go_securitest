@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	work_dto "shared/dto"
 	"shared/scenarios"
 
 	"github.com/hibiken/asynq"
@@ -13,6 +14,7 @@ import (
 func (distributor *RedisTaskDistributor) DistributeTaskSendWorkBack(
 	ctx context.Context,
 	payload *scenarios.ScanResult,
+	originalPayload *work_dto.PortTestScenario,
 	scenario ScenarioSelector,
 	opts ...asynq.Option,
 ) error {
