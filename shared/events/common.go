@@ -3,7 +3,6 @@ package events
 import (
 	"fmt"
 	"shared/config"
-	db "shared/db/sqlc"
 
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog/log"
@@ -21,13 +20,13 @@ func InitTaskDistributor() {
 	taskDistributor = NewRedisTaskDistributor(redisOpt)
 }
 
-func InitTaskProcessor(store db.Store, isWorker bool) {
+func InitTaskProcessor(isWorker bool) {
 	// supposed to run as a go routine
 	config := config.Get()
 	redisOpt := asynq.RedisClientOpt{
 		Addr: fmt.Sprintf("%s:%s", config.Redis.Host, config.Redis.Port),
 	}
-	taskProcessor := NewRedisTaskProcessor(redisOpt, store, isWorker)
+	taskProcessor := NewRedisTaskProcessor(redisOpt, isWorker)
 	log.Info().Msg("start task processor")
 	err := taskProcessor.Start(isWorker)
 	if err != nil {

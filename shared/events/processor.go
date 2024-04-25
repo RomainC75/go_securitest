@@ -2,7 +2,6 @@ package events
 
 import (
 	"context"
-	db "shared/db/sqlc"
 
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog/log"
@@ -31,7 +30,6 @@ type TaskProcessor interface {
 
 type RedisTaskProcessor struct {
 	server *asynq.Server
-	store  db.Store
 }
 
 func getQueues(isWorker bool) map[string]int {
@@ -51,7 +49,7 @@ func getQueues(isWorker bool) map[string]int {
 	}
 }
 
-func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store, isWorker bool) TaskProcessor {
+func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, isWorker bool) TaskProcessor {
 
 	server := asynq.NewServer(
 		redisOpt,
@@ -68,7 +66,6 @@ func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store, isWork
 
 	return &RedisTaskProcessor{
 		server: server,
-		store:  store,
 	}
 }
 
