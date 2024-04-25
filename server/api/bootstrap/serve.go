@@ -11,9 +11,9 @@ func Serve() {
 	config.Set()
 	db.Connect()
 
-	// fmt.Println("=> serve", config.Server.Port)
-
 	events.InitTaskDistributor()
+
+	// pass routing // logic ??
 	go events.InitTaskProcessor(false)
 
 	routing.Init()
