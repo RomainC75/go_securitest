@@ -5,8 +5,40 @@
 package db
 
 import (
+	"database/sql"
 	"time"
+
+	"github.com/sqlc-dev/pqtype"
 )
+
+type Address struct {
+	ID        int32
+	IpAddr    pqtype.Inet
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type Port struct {
+	ID         int32
+	IpAddrID   int32
+	Port       int32
+	State      sql.NullBool
+	ExecutedAt time.Time
+}
+
+type Scan struct {
+	ID         int32
+	UserID     int32
+	ExecutedAt time.Time
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+}
+
+type ScanAddress struct {
+	ID        int32
+	ScanID    int32
+	AddressID int32
+}
 
 type User struct {
 	ID        int32

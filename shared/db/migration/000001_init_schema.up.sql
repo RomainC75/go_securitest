@@ -8,19 +8,36 @@ CREATE TABLE users (
 
 CREATE TABLE scans (
     id   SERIAL PRIMARY KEY,
-    user_id   INT PRIMARY KEY,
-    date TIMESTAMP NOT NULL,
+    user_id   INT NOT NULL,
+    executed_at TIMESTAMP NOT NULL,
     created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE addresses (
+    id   SERIAL PRIMARY KEY,
+    ip_addr INET NOT NULL UNIQUE,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+);
+
+CREATE TABLE scan_address (
+    id SERIAL PRIMARY KEY,
+    scan_id INT NOT NULL,
+    address_id INT NOT NULL,
+    FOREIGN KEY (scan_id) REFERENCES scans(id),
+    FOREIGN KEY (address_id) REFERENCES addresses(id),
+    UNIQUE (scan_id, address_id)
 );
 
 CREATE TABLE ports (
     id SERIAL PRIMARY KEY,
-    scan_id INT NOT NULL, 
-    ip VARBINARY(16) NOT NULL, 
+    ip_addr_id INT NOT NULL, 
     port INT NOT NULL,
     state BOOLEAN,
-    FOREIGN KEY (scan_id) REFERENCES scans(id)
+    executed_at TIMESTAMP NOT NULL,
+    FOREIGN KEY (ip_addr_id) REFERENCES addresses(id)
 );
 
 
