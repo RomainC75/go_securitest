@@ -1,7 +1,7 @@
 package response_dto
 
 import (
-	db "shared/db/sqlc"
+	db "server/db/sqlc"
 	"time"
 )
 

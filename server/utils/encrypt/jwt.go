@@ -2,10 +2,10 @@ package encrypt
 
 import (
 	"fmt"
+	db "server/db/sqlc"
 	"time"
 
 	"shared/config"
-	db "shared/db/sqlc"
 
 	"github.com/golang-jwt/jwt/v4"
 )

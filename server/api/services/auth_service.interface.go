@@ -4,7 +4,7 @@ import (
 	"context"
 	request_dto "server/api/dto/request"
 	response_dto "server/api/dto/response"
-	db "shared/db/sqlc"
+	db "server/db/sqlc"
 )
 
 type UserServiceInterface interface {
