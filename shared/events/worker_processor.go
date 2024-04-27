@@ -21,6 +21,8 @@ func (processor *RedisTaskProcessor) ProcessPortScanner(ctx context.Context, tas
 
 	// TODO: send email to user
 
+	// result
+
 	result, err := scenarios.Scan(targetIp, originalPayload.PortRange.Min, originalPayload.PortRange.Max)
 	fmt.Printf("===========FINISHED ================")
 	if err != nil {

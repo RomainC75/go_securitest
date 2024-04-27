@@ -18,6 +18,7 @@ func (distributor *RedisTaskDistributor) DistributeTaskSendWorkBack(
 	scenario ScenarioSelector,
 	opts ...asynq.Option,
 ) error {
+	// TODO : merge payload & originalPayload
 	jsonPayload, err := json.Marshal(payload)
 	if err != nil {
 		return fmt.Errorf("fails to marshal payload: %w", err)
