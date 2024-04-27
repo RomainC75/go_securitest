@@ -35,6 +35,11 @@ func GetString(result ScanResult) ([]byte, error) {
 	return res, nil
 }
 
+// func MultiScan(PortTestScenario work_dto.PortTestScenario){
+
+// 	Scan()
+// }
+
 func Scan(address string, portMin int, portMax int) (ScanResult, error) {
 	if portMax < portMin {
 		return ScanResult{}, errors.New("portRange min > max")
