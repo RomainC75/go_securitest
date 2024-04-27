@@ -1,10 +1,9 @@
 module shared
 
-go 1.22.1
+go 1.22.2
 
 require (
 	github.com/hibiken/asynq v0.24.1
-	github.com/lib/pq v1.10.9
 	github.com/rs/zerolog v1.32.0
 	github.com/spf13/viper v1.18.2
 )
