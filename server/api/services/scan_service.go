@@ -2,8 +2,6 @@ package services
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"server/api/repositories"
 	db "server/db/sqlc"
 	work_dto "shared/dto"
@@ -23,18 +21,18 @@ func NewScanSrv() *ScanSrv {
 
 func (portSrv *ScanSrv) CreateScanSrv(ctx context.Context, address string, ports work_dto.PortTestScenario) (db.Scan, error) {
 	// address
+
 	// ports + address link
+	// foundUser, err := portSrv.portRepo.CreatePort()
+	// fmt.Println("==> found user : ", foundUser, err)
+	// if err == nil {
+	// 	return db.User{}, errors.New("email already used")
+	// }
+
+	// return db.Scan{}, nil
 
 	// scan + address link
-
-	foundUser, err := portSrv.portRepo.CreatePort()
-	fmt.Println("==> found user : ", foundUser, err)
-	if err == nil {
-		return db.User{}, errors.New("email already used")
-	}
-
 	return db.Scan{}, nil
-
 }
 
 // func (userSrv *AuthSrv) LoginSrv(ctx context.Context, user request_dto.LoginRequest) (response_dto.LoginResponse, error) {
