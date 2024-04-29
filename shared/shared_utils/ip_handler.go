@@ -70,7 +70,7 @@ func ExtractBytesFromIpString(ipRange IpRange) ([]string, error) {
 	for !IsIpsEquals(currentIp, targetIp) {
 
 		if currentIp[3] == 255 {
-			IncrementIp(currentIp)
+			IncrementIp(&currentIp)
 			continue
 		}
 
@@ -80,16 +80,23 @@ func ExtractBytesFromIpString(ipRange IpRange) ([]string, error) {
 	return ips, nil
 }
 
-func IncrementIp(ip [4]int) {
+func IncrementIp(ip *[4]int) {
 	index := 3
 	for {
-		ip[index] = 0
-		if ip[index-1] == 255 && index > 0 {
+		// ip[index] = 0
+		if ip[index] == 255 {
+			ip[index] = 0
+			if index == 0 {
+				break
+			}
 			index--
 			continue
+		} else {
+			ip[index]++
 		}
 		break
 	}
+	fmt.Println("inside : ", ip)
 }
 
 func IsIpsEquals(ip1 [4]int, ip2 [4]int) bool {

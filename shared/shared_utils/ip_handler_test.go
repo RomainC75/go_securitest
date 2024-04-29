@@ -29,6 +29,15 @@ func TestConvertStringIpToInts(t *testing.T) {
 	}
 }
 
+func TestIncrementIp(t *testing.T) {
+	for _, testCase := range incrementIpCases {
+		var buffer [4]int
+		copy(buffer[:], testCase.ip[:])
+		IncrementIp(&testCase.ip)
+		require.ElementsMatch(t, testCase.ip, testCase.expected)
+	}
+}
+
 func BenchmarkIsIpValid(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		for _, ipCase := range ipCases {
