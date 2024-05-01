@@ -2,6 +2,8 @@ package shared_utils
 
 import (
 	"fmt"
+	"log"
+	"server/utils"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -36,6 +38,34 @@ func TestIncrementIp(t *testing.T) {
 		IncrementIp(&testCase.ip)
 		require.ElementsMatch(t, testCase.ip, testCase.expected)
 	}
+}
+
+func TestIsIpsEquals(t *testing.T) {
+	for i, isIpsEqualsCase := range isIpsEqualsCases {
+		fmt.Println("=> ", i)
+		isEqual, err := IsIpsEquals(isIpsEqualsCase.ip1, isIpsEqualsCase.ip2)
+		if isIpsEqualsCase.err != nil {
+			require.Error(t, err)
+			require.Equal(t, err.Error(), isIpsEqualsCase.err.Error())
+			require.Equal(t, isEqual, false)
+		} else {
+			require.Equal(t, isIpsEqualsCase.expect, isEqual)
+			require.NoError(t, err)
+		}
+	}
+}
+
+func TestExtractAddressesFromRange(t *testing.T) {
+	ipRange := IpRange{
+		IpMin: "0.0.0.0",
+		IpMax: "2.0.0.1",
+	}
+	res, err := ExtractAddressesFromRange(ipRange)
+	if err != nil {
+		log.Fatal("xx")
+	}
+	utils.PrettyDisplay("ips : ", res)
+
 }
 
 func BenchmarkIsIpValid(b *testing.B) {

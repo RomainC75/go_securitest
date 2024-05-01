@@ -53,7 +53,7 @@ func convertIntIpToString(ip [4]int) string {
 	return strings.Join(separatedIp[:], ".")
 }
 
-func ExtractBytesFromIpString(ipRange IpRange) ([]string, error) {
+func ExtractAddressesFromRange(ipRange IpRange) ([]string, error) {
 	if !IsIpValid(ipRange.IpMin) || !IsIpValid(ipRange.IpMax) {
 		return []string{}, errors.New("invalid Ip")
 	}
@@ -67,23 +67,30 @@ func ExtractBytesFromIpString(ipRange IpRange) ([]string, error) {
 	}
 	ips := []string{}
 
-	for !IsIpsEquals(currentIp, targetIp) {
+	for {
+		isEqual, err := IsIpsEquals(currentIp, targetIp)
+		if err != nil {
+			return []string{}, err
+		}
+		if !isEqual {
+			break
+		}
+		ips = append(ips, convertIntIpToString(currentIp))
 
 		if currentIp[3] == 255 {
 			IncrementIp(&currentIp)
 			continue
 		}
 
-		currentIp[3]++
-		ips = append(ips, convertIntIpToString(currentIp))
+		// currentIp[3]++
 	}
 	return ips, nil
 }
 
 func IncrementIp(ip *[4]int) {
 	index := 3
+
 	for {
-		// ip[index] = 0
 		if ip[index] == 255 {
 			ip[index] = 0
 			if index == 0 {
@@ -99,15 +106,19 @@ func IncrementIp(ip *[4]int) {
 	fmt.Println("inside : ", ip)
 }
 
-func IsIpsEquals(ip1 [4]int, ip2 [4]int) bool {
+func IsIpsEquals(ip1 [4]int, ip2 [4]int) (bool, error) {
+	isValid := IsIpValid(fmt.Sprintf("%d.%d.%d.%d", ip1[0], ip1[1], ip1[2], ip1[3]))
+	if !isValid {
+		return false, errors.New("ip1 is not valid")
+	}
+	isValid = IsIpValid(fmt.Sprintf("%d.%d.%d.%d", ip2[0], ip2[1], ip2[2], ip2[3]))
+	if !isValid {
+		return false, errors.New("ip2 is not valid")
+	}
 	for i := 0; i < 4; i++ {
 		if ip1[i] != ip2[i] {
-			return false
+			return false, nil
 		}
 	}
-	return true
+	return true, nil
 }
-
-// func IpRangeExtractor(ipRange IpRange) []string {
-
-// }

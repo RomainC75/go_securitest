@@ -1,5 +1,7 @@
 package shared_utils
 
+import "errors"
+
 var ipCases = []struct {
 	ip       string
 	expected bool
@@ -37,4 +39,18 @@ var incrementIpCases = []struct {
 	{[4]int{123, 123, 255, 255}, [4]int{123, 124, 0, 0}},
 	{[4]int{123, 255, 255, 255}, [4]int{124, 0, 0, 0}},
 	{[4]int{255, 255, 255, 255}, [4]int{0, 0, 0, 0}},
+}
+
+var isIpsEqualsCases = []struct {
+	ip1    [4]int
+	ip2    [4]int
+	expect bool
+	err    error
+}{
+	{[4]int{123, 123, 123, 123}, [4]int{123, 123, 123, 123}, true, nil},
+	{[4]int{123, 123, 123, 123}, [4]int{123, 123, 123, 124}, false, nil},
+	{[4]int{0, 0, 0, 0}, [4]int{0, 0, 0, 0}, true, nil},
+	{[4]int{0, 0, 0, 1}, [4]int{0, 0, 0, 0}, false, nil},
+	{[4]int{2, 5677, 0, 1}, [4]int{0, 0, 0, 0}, false, errors.New("ip1 is not valid")},
+	{[4]int{2, 3, 0, 1}, [4]int{0, 0, 12345, 0}, false, errors.New("ip2 is not valid")},
 }
