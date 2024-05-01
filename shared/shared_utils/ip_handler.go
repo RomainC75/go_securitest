@@ -19,10 +19,7 @@ func IsIpValid(ip string) bool {
 		return false
 	}
 	_, err := ConvertStringIpToInts(ip)
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 }
 
 func ConvertStringIpToInts(ip string) ([4]int, error) {
@@ -53,7 +50,7 @@ func convertIntIpToString(ip [4]int) string {
 	return strings.Join(separatedIp[:], ".")
 }
 
-func ExtractAddressesFromRange(ipRange IpRange) ([]string, error) {
+func ExtractIpAddressesFromRange(ipRange IpRange) ([]string, error) {
 	if !IsIpValid(ipRange.IpMin) || !IsIpValid(ipRange.IpMax) {
 		return []string{}, errors.New("invalid Ip")
 	}
@@ -66,23 +63,20 @@ func ExtractAddressesFromRange(ipRange IpRange) ([]string, error) {
 		return []string{}, err
 	}
 	ips := []string{}
-
+	ips = append(ips, convertIntIpToString(currentIp))
 	for {
 		isEqual, err := IsIpsEquals(currentIp, targetIp)
 		if err != nil {
 			return []string{}, err
 		}
-		if !isEqual {
+		if isEqualStartIp, _ := IsIpsEquals(currentIp, [4]int{255, 255, 255, 255}); isEqualStartIp || isEqual {
 			break
 		}
+		fmt.Println("=> currentIpd : ", currentIp)
+
+		IncrementIp(&currentIp)
 		ips = append(ips, convertIntIpToString(currentIp))
 
-		if currentIp[3] == 255 {
-			IncrementIp(&currentIp)
-			continue
-		}
-
-		// currentIp[3]++
 	}
 	return ips, nil
 }

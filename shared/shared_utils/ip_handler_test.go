@@ -57,10 +57,10 @@ func TestIsIpsEquals(t *testing.T) {
 
 func TestExtractAddressesFromRange(t *testing.T) {
 	ipRange := IpRange{
-		IpMin: "0.0.0.0",
-		IpMax: "2.0.0.1",
+		IpMin: "255.255.255.250",
+		IpMax: "0.0.0.2",
 	}
-	res, err := ExtractAddressesFromRange(ipRange)
+	res, err := ExtractIpAddressesFromRange(ipRange)
 	if err != nil {
 		log.Fatal("xx")
 	}
