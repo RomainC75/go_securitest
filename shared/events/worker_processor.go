@@ -16,19 +16,12 @@ func (processor *RedisTaskProcessor) ProcessPortScanner(ctx context.Context, tas
 	if err := json.Unmarshal(task.Payload(), &originalPayload); err != nil {
 		return fmt.Errorf("failed to unmarshal originalPayload : %w", asynq.SkipRetry)
 	}
-	targetIp := originalPayload.IPRange.IpMin
-	// user, err := processor.store.GetUserByEmail(ctx, originalPayload.Username)
 
-	// TODO: send email to user
-
-	// result
-
-	result, err := scenarios.Scan(targetIp, originalPayload.PortRange.Min, originalPayload.PortRange.Max)
+	result, err := scenarios.Scan(originalPayload)
 	fmt.Printf("===========FINISHED ================")
 	if err != nil {
 		log.Error().Str("scenario Error : ", err.Error())
 	}
-	// strResult, err := scenarios.GetString(result)
 
 	log.Info().Str("type", task.Type()).Bytes("originalPayload", task.Payload()).
 		Str("targetIp", targetIp).Msg("PROCESSED task")
