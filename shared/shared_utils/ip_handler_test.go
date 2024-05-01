@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"server/utils"
+	work_dto "shared/dto"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -56,7 +57,7 @@ func TestIsIpsEquals(t *testing.T) {
 }
 
 func TestExtractAddressesFromRange(t *testing.T) {
-	ipRange := IpRange{
+	ipRange := work_dto.IpRange{
 		IpMin: "255.255.255.250",
 		IpMax: "0.0.0.2",
 	}

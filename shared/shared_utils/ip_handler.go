@@ -4,14 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	work_dto "shared/dto"
 	"strconv"
 	"strings"
 )
-
-type IpRange struct {
-	IpMin string `json:"ip_min" validate:"required"`
-	IpMax string `json:"ip_max" validate:"required,ip"`
-}
 
 func IsIpValid(ip string) bool {
 	re := regexp.MustCompile(`^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$`)
@@ -50,7 +46,7 @@ func convertIntIpToString(ip [4]int) string {
 	return strings.Join(separatedIp[:], ".")
 }
 
-func ExtractIpAddressesFromRange(ipRange IpRange) ([]string, error) {
+func ExtractIpAddressesFromRange(ipRange work_dto.IpRange) ([]string, error) {
 	if !IsIpValid(ipRange.IpMin) || !IsIpValid(ipRange.IpMax) {
 		return []string{}, errors.New("invalid Ip")
 	}

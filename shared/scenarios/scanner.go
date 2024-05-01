@@ -1,18 +1,18 @@
 package scenarios
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net"
+	work_dto "shared/dto"
+	"shared/shared_utils"
 	"sync"
 	"time"
 )
 
 type ScanResult struct {
-	Address string         `json:"address"`
-	Date    time.Time      `json:"date"`
-	Ports   []PortResponse `json:"ports"`
+	Date            time.Time       `json:"date"`
+	PortAnalysisMap PortResponseMap `json:"port_analysis"`
 }
 
 type PortResponse struct {
@@ -20,69 +20,77 @@ type PortResponse struct {
 	IsOpen bool `json:"is_open"`
 }
 
-func GetString(result ScanResult) ([]byte, error) {
-	openPorts := []PortResponse{}
-	for _, pRes := range result.Ports {
-		if pRes.IsOpen {
-			openPorts = append(openPorts, pRes)
-		}
-	}
-	result.Ports = openPorts
-	res, err := json.Marshal(result)
-	if err != nil {
-		return []byte{}, err
-	}
-	return res, nil
-}
-
-// func MultiScan(PortTestScenario work_dto.PortTestScenario){
-
-// 	Scan()
+// func GetString(result ScanResult) ([]byte, error) {
+// 	openPorts := []PortResponse{}
+// 	for _, pRes := range result.Ports {
+// 		if pRes.IsOpen {
+// 			openPorts = append(openPorts, pRes)
+// 		}
+// 	}
+// 	result.Ports = openPorts
+// 	res, err := json.Marshal(result)
+// 	if err != nil {
+// 		return []byte{}, err
+// 	}
+// 	return res, nil
 // }
 
-func Scan(address string, portMin int, portMax int) (ScanResult, error) {
-	if portMax < portMin {
+type Analysis struct {
+	ip           string
+	portResponse PortResponse
+}
+
+type PortResponseMap map[string][]PortResponse
+
+func Scan(payload work_dto.PortTestScenario) (ScanResult, error) {
+
+	if payload.PortRange.Min < payload.PortRange.Max {
 		return ScanResult{}, errors.New("portRange min > max")
 	}
-	portResponses := []PortResponse{}
+	portResponses := PortResponseMap{}
 
 	var wg sync.WaitGroup
-	resultChan := make(chan PortResponse)
+	resultChan := make(chan Analysis)
 	done := make(chan int)
-	goMerger(&portResponses, resultChan, done)
+	goMerger(portResponses, resultChan, done)
 
-	for i := portMin; i <= portMax; i++ {
-		fmt.Println("=>", i)
-		wg.Add(1)
-		goScanUnit(address, i, resultChan, &wg)
+	addresses, err := shared_utils.ExtractIpAddressesFromRange(payload.IPRange)
+	if err != nil {
+		return ScanResult{}, err
+	}
+
+	for _, address := range addresses {
+		for i := payload.PortRange.Min; i <= payload.PortRange.Max; i++ {
+			fmt.Println("=>", i)
+			wg.Add(1)
+			goScanUnit(address, i, resultChan, &wg)
+		}
 	}
 
 	wg.Wait()
 	done <- 1
 	return ScanResult{
-		Address: address,
-		Date:    time.Now(),
-		Ports:   portResponses,
+		Date:            time.Now(),
+		PortAnalysisMap: portResponses,
 	}, nil
 }
 
-func goMerger(portResponses *[]PortResponse, resultChan chan PortResponse, done <-chan int) {
+func goMerger(portResponses PortResponseMap, resultChan chan Analysis, done <-chan int) {
 	go func() {
 		for {
 			select {
 			case <-done:
 				return
 			case response := <-resultChan:
-				// fmt.Println("res : ", response.IsOpen, response.Num)
-				if response.IsOpen {
-					*portResponses = append(*portResponses, response)
+				if response.portResponse.IsOpen {
+					portResponses[response.ip] = append(portResponses[response.ip], response.portResponse)
 				}
 			}
 		}
 	}()
 }
 
-func goScanUnit(address string, i int, resultChan chan PortResponse, wg *sync.WaitGroup) {
+func goScanUnit(address string, i int, resultChan chan Analysis, wg *sync.WaitGroup) {
 	go func() {
 		port := i
 		defer wg.Done()
@@ -96,6 +104,9 @@ func goScanUnit(address string, i int, resultChan chan PortResponse, wg *sync.Wa
 			fmt.Printf("==> ", port)
 			portResp.IsOpen = true
 		}
-		resultChan <- portResp
+		resultChan <- Analysis{
+			ip:           address,
+			portResponse: portResp,
+		}
 	}()
 }
