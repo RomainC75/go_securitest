@@ -15,6 +15,7 @@ type FullPortTestScenario struct {
 }
 
 type PortTestScenario struct {
+	UserId    int32   `json:"user_id", validate:"required"`
 	IPRange   IpRange `json:"ip_range" validate:"required"`
 	PortRange Range   `json:"range" validate:"required"`
 }

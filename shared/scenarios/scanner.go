@@ -12,6 +12,7 @@ import (
 )
 
 type ScanResult struct {
+	UserId          int32           `json:"user_id"`
 	Date            time.Time       `json:"date"`
 	PortAnalysisMap PortResponseMap `json:"port_analysis"`
 }
