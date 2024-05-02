@@ -43,6 +43,9 @@ func convertIntIpToString(ip [4]int) string {
 }
 
 func ExtractIpAddressesFromRange(ipRange work_dto.IpRange) ([]string, error) {
+	if ipRange.Unique {
+		return []string{ipRange.IpMin}, nil
+	}
 	if !IsIpValid(ipRange.IpMin) || !IsIpValid(ipRange.IpMax) {
 		return []string{}, errors.New("invalid Ip")
 	}
