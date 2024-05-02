@@ -18,14 +18,12 @@ func (processor *RedisTaskProcessor) ProcessPortScanner(ctx context.Context, tas
 	}
 
 	result, err := scenarios.Scan(originalPayload)
-	fmt.Printf("===========FINISHED ================")
 	if err != nil {
 		log.Error().Str("scenario Error : ", err.Error())
 	}
 
 	log.Info().Str("type", task.Type()).Bytes("originalPayload", task.Payload()).
-		Str("targetIp", targetIp).Msg("PROCESSED task")
-	//============================================
+		Str("targetIp", originalPayload.IPRange.IpMin).Str("targetIp", originalPayload.IPRange.IpMax).Msg("PROCESSED task")
 	distributor := Get()
 	opts := []asynq.Option{
 		asynq.MaxRetry(10),
@@ -33,7 +31,6 @@ func (processor *RedisTaskProcessor) ProcessPortScanner(ctx context.Context, tas
 		// + send to other queue :-)
 		asynq.Queue(string(CriticalQueueRes)),
 	}
-	fmt.Println("====> distributor : ", distributor)
 	err = distributor.DistributeTaskSendWorkBack(
 		ctx,
 		&result,

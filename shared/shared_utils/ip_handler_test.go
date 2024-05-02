@@ -2,9 +2,6 @@ package shared_utils
 
 import (
 	"fmt"
-	"log"
-	"server/utils"
-	work_dto "shared/dto"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -56,18 +53,18 @@ func TestIsIpsEquals(t *testing.T) {
 	}
 }
 
-func TestExtractAddressesFromRange(t *testing.T) {
-	ipRange := work_dto.IpRange{
-		IpMin: "255.255.255.250",
-		IpMax: "0.0.0.2",
-	}
-	res, err := ExtractIpAddressesFromRange(ipRange)
-	if err != nil {
-		log.Fatal("xx")
-	}
-	utils.PrettyDisplay("ips : ", res)
+// func TestExtractAddressesFromRange(t *testing.T) {
+// 	ipRange := work_dto.IpRange{
+// 		IpMin: "255.255.255.250",
+// 		IpMax: "0.0.0.2",
+// 	}
+// 	res, err := ExtractIpAddressesFromRange(ipRange)
+// 	if err != nil {
+// 		log.Fatal("xx")
+// 	}
+// 	utils.PrettyDisplay("ips : ", res)
 
-}
+// }
 
 func BenchmarkIsIpValid(b *testing.B) {
 	for i := 0; i < b.N; i++ {

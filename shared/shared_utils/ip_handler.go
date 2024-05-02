@@ -19,22 +19,18 @@ func IsIpValid(ip string) bool {
 }
 
 func ConvertStringIpToInts(ip string) ([4]int, error) {
-	fmt.Println("=> ", ip)
 	numbers := strings.Split(ip, ".")
 	if len(numbers) != 4 {
-		fmt.Println("=> error 1 ", ip)
 		return [4]int{}, errors.New("invalid Ip")
 	}
 	res := [4]int{}
 	for index, number := range numbers {
 		intNum, err := strconv.Atoi(number)
 		if err != nil || intNum < 0 || intNum > 255 {
-			fmt.Println("=> error 2 ", ip)
 			return [4]int{}, errors.New("invalid Ip")
 		}
 		res[index] = intNum
 	}
-	fmt.Println("=> OOK ", ip)
 	return res, nil
 }
 
@@ -68,8 +64,6 @@ func ExtractIpAddressesFromRange(ipRange work_dto.IpRange) ([]string, error) {
 		if isEqualStartIp, _ := IsIpsEquals(currentIp, [4]int{255, 255, 255, 255}); isEqualStartIp || isEqual {
 			break
 		}
-		fmt.Println("=> currentIpd : ", currentIp)
-
 		IncrementIp(&currentIp)
 		ips = append(ips, convertIntIpToString(currentIp))
 
@@ -93,7 +87,6 @@ func IncrementIp(ip *[4]int) {
 		}
 		break
 	}
-	fmt.Println("inside : ", ip)
 }
 
 func IsIpsEquals(ip1 [4]int, ip2 [4]int) (bool, error) {
