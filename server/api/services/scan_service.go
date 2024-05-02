@@ -4,22 +4,26 @@ import (
 	"context"
 	"server/api/repositories"
 	db "server/db/sqlc"
-	work_dto "shared/dto"
+	"shared/scenarios"
 )
 
 type ScanSrv struct {
 	portRepo    repositories.PortRepositoryInterface
 	addressRepo repositories.AddressRepositoryInterface
+	scanRepo    repositories.ScanRepositoryInterface
 }
 
 func NewScanSrv() *ScanSrv {
 	return &ScanSrv{
 		portRepo:    repositories.NewPortRepo(),
 		addressRepo: repositories.NewAddressRepo(),
+		scanRepo:    repositories.NewScanRepo(),
 	}
 }
 
-func (portSrv *ScanSrv) CreateScanSrv(ctx context.Context, address string, ports work_dto.PortTestScenario) (db.Scan, error) {
+func (portSrv *ScanSrv) CreateScanSrv(ctx context.Context, scanResult scenarios.ScanResult) (db.Scan, error) {
+	// scan
+
 	// address
 
 	// ports + address link

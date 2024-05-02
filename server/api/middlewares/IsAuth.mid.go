@@ -34,9 +34,8 @@ func IsAuth(next http.Handler, isSocket bool) http.Handler {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
-
 		ctx := context.WithValue(r.Context(), "user_email", claim["Email"])
-		ctx = context.WithValue(ctx, "user_id", claim["ID"])
+		ctx = context.WithValue(ctx, "user_id", int32(claim["ID"].(float64)))
 		r = r.WithContext(ctx)
 
 		next.ServeHTTP(w, r)
