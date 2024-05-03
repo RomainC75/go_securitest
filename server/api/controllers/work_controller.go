@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"server/api/controllers/ctrl_utils"
 	"server/api/services"
@@ -33,7 +32,6 @@ func (workCtrl *WorkCtrl) HandleWorkTest(w http.ResponseWriter, r *http.Request)
 			ctrl_utils.SendErrorResponse(w, status, err.Error(), ctrl_utils.ValidationErrorType)
 			return
 		}
-		fmt.Println("==> ", portTestScenario)
 
 		ctx := context.Background()
 		distributor := events.Get()

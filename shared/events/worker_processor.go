@@ -34,10 +34,8 @@ func (processor *RedisTaskProcessor) ProcessPortScanner(ctx context.Context, tas
 	err = distributor.DistributeTaskSendWorkBack(
 		ctx,
 		&result,
-		&originalPayload,
 		PortScanner,
 		opts...,
 	)
-
-	return nil
+	return err
 }
