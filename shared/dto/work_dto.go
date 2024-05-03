@@ -14,12 +14,13 @@ type FullPortTestScenario struct {
 	PortTestScenario PortTestScenario `json:"scenario" validate:"required"`
 }
 
-type FullPortAuthentifiedTestScenario struct {
-	FullPortTestScenario
-	UserId int32 `json:"user_id", validate:"required"`
+type PortTestScenario struct {
+	IPRange   IpRange `json:"ip_range" validate:"required"`
+	PortRange Range   `json:"range" validate:"required"`
 }
 
-type PortTestScenario struct {
+type PortTestScenarioRequest struct {
+	UserId    int32   `json:"user_id" validate:"required"`
 	IPRange   IpRange `json:"ip_range" validate:"required"`
 	PortRange Range   `json:"range" validate:"required"`
 }

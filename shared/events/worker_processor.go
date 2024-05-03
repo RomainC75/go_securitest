@@ -12,7 +12,7 @@ import (
 )
 
 func (processor *RedisTaskProcessor) ProcessPortScanner(ctx context.Context, task *asynq.Task) error {
-	var originalPayload work_dto.PortTestScenario
+	var originalPayload work_dto.PortTestScenarioRequest
 	if err := json.Unmarshal(task.Payload(), &originalPayload); err != nil {
 		return fmt.Errorf("failed to unmarshal originalPayload : %w", asynq.SkipRetry)
 	}

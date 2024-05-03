@@ -14,7 +14,7 @@ import (
 func (distributor *RedisTaskDistributor) DistributeTaskSendWorkBack(
 	ctx context.Context,
 	payload *scenarios.ScanResult,
-	originalPayload *work_dto.PortTestScenario,
+	originalPayload *work_dto.PortTestScenarioRequest,
 	scenario ScenarioSelector,
 	opts ...asynq.Option,
 ) error {

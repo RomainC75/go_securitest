@@ -29,7 +29,7 @@ type Analysis struct {
 
 type PortResponseMap map[string][]PortResponse
 
-func Scan(payload work_dto.PortTestScenario) (ScanResult, error) {
+func Scan(payload work_dto.PortTestScenarioRequest) (ScanResult, error) {
 	fmt.Println("=> scan beginning")
 	utils.PrettyDisplay("SCAN : ", payload)
 	if payload.PortRange.Min > payload.PortRange.Max {
@@ -59,6 +59,7 @@ func Scan(payload work_dto.PortTestScenario) (ScanResult, error) {
 	wg.Wait()
 	done <- 1
 	return ScanResult{
+		UserId:          payload.UserId,
 		Date:            time.Now(),
 		PortAnalysisMap: portResponses,
 	}, nil
