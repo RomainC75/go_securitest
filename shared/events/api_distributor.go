@@ -12,7 +12,7 @@ import (
 
 func (distributor *RedisTaskDistributor) DistributeTaskSendWork(
 	ctx context.Context,
-	payload *work_dto.PortTestScenario,
+	payload *work_dto.PortTestScenarioRequest,
 	scenario ScenarioSelector,
 	opts ...asynq.Option,
 ) error {

@@ -24,8 +24,6 @@ func NewWorkCtrl() *WorkCtrl {
 
 func (workCtrl *WorkCtrl) HandleWorkTest(w http.ResponseWriter, r *http.Request) {
 	workCode := r.PathValue("work_code")
-	fmt.Println("=> WK ! ", workCode)
-
 	userId := r.Context().Value("user_id").(int32)
 
 	switch workCode {
@@ -37,13 +35,6 @@ func (workCtrl *WorkCtrl) HandleWorkTest(w http.ResponseWriter, r *http.Request)
 		}
 		fmt.Println("==> ", portTestScenario)
 
-		// TODO add userId to the scan !
-		fullAuthentifiedPortScenario := work_dto.FullPortAuthentifiedTestScenario{
-			BasicData:        portTestScenario.BasicData,
-			PortTestScenario: portTestScenario.PortTestScenario,
-			UserId:           userId,
-		}
-
 		ctx := context.Background()
 		distributor := events.Get()
 		opts := []asynq.Option{
@@ -53,9 +44,15 @@ func (workCtrl *WorkCtrl) HandleWorkTest(w http.ResponseWriter, r *http.Request)
 			asynq.Queue(string(events.CriticalQueueReq)),
 		}
 
+		scenarioRequest := work_dto.PortTestScenarioRequest{
+			UserId:    userId,
+			IPRange:   portTestScenario.PortTestScenario.IPRange,
+			PortRange: portTestScenario.PortTestScenario.PortRange,
+		}
+
 		err := distributor.DistributeTaskSendWork(
 			ctx,
-			&portTestScenario.PortTestScenario,
+			&scenarioRequest,
 			events.PortScanner,
 			opts...,
 		)

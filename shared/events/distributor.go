@@ -11,14 +11,14 @@ import (
 type TaskDistributor interface {
 	DistributeTaskSendWork(
 		ctx context.Context,
-		payload *work_dto.PortTestScenario,
+		payload *work_dto.PortTestScenarioRequest,
 		scenario ScenarioSelector,
 		opts ...asynq.Option,
 	) error
 	DistributeTaskSendWorkBack(
 		ctx context.Context,
 		payload *scenarios.ScanResult,
-		originalPayload *work_dto.PortTestScenario,
+		originalPayload *work_dto.PortTestScenarioRequest,
 		scenario ScenarioSelector,
 		opts ...asynq.Option,
 	) error
