@@ -6,16 +6,17 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"shared/config"
 	"syscall"
+
+	"github.com/spf13/viper"
 )
 
 func RunApi(mux *http.ServeMux) {
-	config := config.Get()
+	port := viper.Get("SERVER_PORT")
 
 	go func() {
-		fmt.Printf("====> listening to port : %d\n", config.Port)
-		err := http.ListenAndServe(fmt.Sprintf(":%d", config.Port), mux)
+		fmt.Printf("====> listening to port : %d\n", port)
+		err := http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
 		if err != nil {
 			log.Fatal("error trying to launch the server", err.Error())
 		}

@@ -8,6 +8,7 @@ import (
 	"shared/config"
 
 	_ "github.com/lib/pq"
+	"github.com/spf13/viper"
 )
 
 type Store interface {
@@ -46,13 +47,12 @@ func NewStore(db *sql.DB) Store {
 }
 
 func Connect() {
-	cfg := config.Get()
 	dsn := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable",
-		cfg.Db.User,
-		cfg.Db.Password,
-		cfg.Db.Host,
-		cfg.Db.Port,
-		cfg.Db.Name,
+		viper.GetString(string(config.POSTGRES_USER)),
+		viper.GetString(string(config.POSTGRES_PASSWORD)),
+		viper.GetString(string(config.POSTGRES_HOST)),
+		viper.GetString(string(config.POSTGRES_PORT)),
+		viper.GetString(string(config.POSTGRES_DB_NAME)),
 	)
 
 	conn, err := sql.Open("postgres", dsn)

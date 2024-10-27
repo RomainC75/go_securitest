@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/spf13/viper"
@@ -16,5 +15,4 @@ func Set() {
 		}
 	}
 
-	fmt.Println("=> configurations : ", configurations)
 }

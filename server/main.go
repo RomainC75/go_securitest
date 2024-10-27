@@ -1,8 +1,6 @@
 package main
 
-import (
-	"server/api/bootstrap"
-)
+import "server/internal/bootstrap"
 
 func main() {
 	bootstrap.Bootstrap()

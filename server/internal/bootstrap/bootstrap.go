@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"fmt"
 	db "server/db/sqlc"
+	"server/internal/api"
 	"server/internal/api/routing"
 	"shared/config"
 )

@@ -1,5 +1,0 @@
-kafka:
-  topic: "purchases"
-  brokerUrl: "broker:9092"
-  consumerGroupId: "kafka-go-getting-started"
-
