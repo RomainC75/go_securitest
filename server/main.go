@@ -1,13 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"shared/dto"
+	"server/api/bootstrap"
 )
 
 func main() {
-	test := dto.Test{
-		Ty: "hello",
-	}
-	fmt.Println("hello", test)
+	bootstrap.Bootstrap()
 }
