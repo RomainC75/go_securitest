@@ -31,7 +31,7 @@ services:
       - POSTGRES_PORT=${POSTGRES_PORT}
       - SERVER_PORT=${SERVER_PORT}
     ports:
-      - '5000:5000'
+      - '3000:${SERVER_PORT}'
     volumes:
       - ./server:/go/src/server
       - ./shared:/go/src/shared

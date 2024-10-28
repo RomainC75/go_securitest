@@ -1,16 +1,5 @@
 package config
 
-var dbVars = []string{
-	"POSTGRES_USER",
-	"POSTGRES_PASSWORD",
-	"POSTGRES_DB_NAME",
-	"POSTGRES_HOST",
-	"POSTGRES_PORT",
-
-	// "SERVER_HOST",
-	"SERVER_PORT",
-}
-
 type ConfigVar string
 
 const (

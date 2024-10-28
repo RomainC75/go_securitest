@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"fmt"
+	"server/conf"
 	db "server/db/sqlc"
 	"server/internal/api"
 	"server/internal/api/routing"
@@ -10,7 +11,7 @@ import (
 
 func Bootstrap() {
 	fmt.Println("==BOOTSTRAP==")
-	config.Set()
+	config.Set(conf.VarList)
 	// cfg := config.GetConfig()
 	// utils.PrettyDisplay(".env", cfg)
 

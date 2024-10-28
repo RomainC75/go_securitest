@@ -6,11 +6,11 @@ import (
 	"github.com/spf13/viper"
 )
 
-func Set() {
+func Set(varList []ConfigVar) {
 	viper.AutomaticEnv()
 
-	for _, v := range dbVars {
-		if !viper.IsSet(v) {
+	for _, v := range varList {
+		if !viper.IsSet(string(v)) {
 			log.Fatalf("Environment variable %s not set", v)
 		}
 	}

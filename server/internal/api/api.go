@@ -15,8 +15,8 @@ func RunApi(mux *http.ServeMux) {
 	port := viper.Get("SERVER_PORT")
 
 	go func() {
-		fmt.Printf("====> listening to port : %d\n", port)
-		err := http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
+		fmt.Printf("====> listening to port : %s\n", port)
+		err := http.ListenAndServe(fmt.Sprintf(":%s", port), mux)
 		if err != nil {
 			log.Fatal("error trying to launch the server", err.Error())
 		}
