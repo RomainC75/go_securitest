@@ -14,5 +14,4 @@ func Set(varList []ConfigVar) {
 			log.Fatalf("Environment variable %s not set", v)
 		}
 	}
-
 }

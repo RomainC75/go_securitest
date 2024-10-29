@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -34,8 +33,7 @@ func (c *AuthController) HandleAuthSignup(w http.ResponseWriter, r *http.Request
 	}
 
 	fmt.Println("-->", u)
-	ctx := context.Background()
-	createdUser, err := c.AuthSrv.Signup(ctx, u)
+	createdUser, err := c.AuthSrv.Signup(u)
 	if err != nil {
 		utils.SendError(w, 401, err)
 		return
