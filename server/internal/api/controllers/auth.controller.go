@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -24,7 +25,6 @@ func NewAuthController() *AuthController {
 var validate *validator.Validate
 
 func (c *AuthController) HandleAuthSignup(w http.ResponseWriter, r *http.Request) {
-
 	var u dtos.UserSignupDto
 
 	err := json.NewDecoder(r.Body).Decode(&u)
@@ -34,10 +34,11 @@ func (c *AuthController) HandleAuthSignup(w http.ResponseWriter, r *http.Request
 	}
 
 	fmt.Println("-->", u)
-
-	createdUser, err := c.AuthSrv.Signup(u)
+	ctx := context.Background()
+	createdUser, err := c.AuthSrv.Signup(ctx, u)
 	if err != nil {
 		utils.SendError(w, 401, err)
+		return
 	}
 
 	// err := validate.Struct(mystruct)

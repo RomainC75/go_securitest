@@ -17,8 +17,7 @@ func NewAuthRepo() *UserRepo {
 	}
 }
 
-func (userRepo *UserRepo) CreateUser(signupData dtos.UserSignupDto) (db.User, error) {
-	ctx := context.Background()
+func (userRepo *UserRepo) CreateUser(ctx context.Context, signupData dtos.UserSignupDto) (db.User, error) {
 	createdUser := db.CreateUserParams{
 		Email:    signupData.Email,
 		Password: signupData.Password,

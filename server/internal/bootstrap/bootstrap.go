@@ -12,8 +12,6 @@ import (
 func Bootstrap() {
 	fmt.Println("==BOOTSTRAP==")
 	config.Set(conf.VarList)
-	// cfg := config.GetConfig()
-	// utils.PrettyDisplay(".env", cfg)
 
 	db.Connect()
 	// kafka.SetKafkaWriter()
