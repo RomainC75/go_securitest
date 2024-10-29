@@ -35,10 +35,15 @@ func (c *AuthController) HandleAuthSignup(w http.ResponseWriter, r *http.Request
 
 	fmt.Println("-->", u)
 
+	createdUser, err := c.AuthSrv.Signup(u)
+	if err != nil {
+		utils.SendError(w, 401, err)
+	}
+
 	// err := validate.Struct(mystruct)
 	// validationErrors := err.(validator.ValidationErrors)
 	utils.SendJson(w, 200, map[string]any{
-		"message": u,
+		"message": createdUser,
 	})
 }
 

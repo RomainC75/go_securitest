@@ -4,6 +4,7 @@ import (
 	"context"
 	db "server/db/sqlc"
 	"server/internal/api/dtos"
+	"server/utils"
 )
 
 type UserRepo struct {
@@ -22,5 +23,6 @@ func (userRepo *UserRepo) CreateUser(signupData dtos.UserSignupDto) (db.User, er
 		Email:    signupData.Email,
 		Password: signupData.Password,
 	}
+	utils.PrettyDisplay("createUser", createdUser)
 	return (*userRepo.Store).CreateUser(ctx, createdUser)
 }

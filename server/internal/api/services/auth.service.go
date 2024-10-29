@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	db "server/db/sqlc"
 	"server/internal/api/dtos"
 	"server/internal/api/repositories"
@@ -17,5 +18,6 @@ func NewAuthSrv() *AuthSrv {
 }
 
 func (authSrv *AuthSrv) Signup(signupData dtos.UserSignupDto) (db.User, error) {
+	fmt.Println("SRV")
 	return authSrv.UserRepo.CreateUser(signupData)
 }

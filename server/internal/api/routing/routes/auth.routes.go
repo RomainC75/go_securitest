@@ -6,7 +6,7 @@ import (
 )
 
 func AuthRoutes(mux *http.ServeMux) {
-	controllers := controllers.AuthController{}
+	controllers := controllers.NewAuthController()
 	mux.HandleFunc("POST /auth/signup", controllers.HandleAuthSignup)
 
 }
