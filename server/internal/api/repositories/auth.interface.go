@@ -2,9 +2,9 @@ package repositories
 
 import (
 	db "server/db/sqlc"
-	"server/internal/api/dtos"
+	dto_req "server/internal/api/dtos/requests"
 )
 
 type IAuthRepo interface {
-	CreateUser(signupData dtos.UserSignupDto) (db.User, error)
+	CreateUser(signupData dto_req.UserSignupDto) (db.User, error)
 }

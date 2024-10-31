@@ -2,9 +2,8 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
-	"server/internal/api/dtos"
+	dto_req "server/internal/api/dtos/requests"
 	"server/internal/api/services"
 	"server/utils"
 
@@ -24,7 +23,7 @@ func NewAuthController() *AuthController {
 var validate *validator.Validate
 
 func (c *AuthController) HandleAuthSignup(w http.ResponseWriter, r *http.Request) {
-	var u dtos.UserSignupDto
+	var u dto_req.UserSignupDto
 
 	err := json.NewDecoder(r.Body).Decode(&u)
 	if err != nil {
@@ -32,7 +31,6 @@ func (c *AuthController) HandleAuthSignup(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	fmt.Println("-->", u)
 	createdUser, err := c.AuthSrv.Signup(u)
 	if err != nil {
 		utils.SendError(w, 401, err)

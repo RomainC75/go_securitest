@@ -2,8 +2,10 @@ package services
 
 import (
 	db "server/db/sqlc"
-	"server/internal/api/dtos"
+	dto_req "server/internal/api/dtos/requests"
 	"server/internal/api/repositories"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthSrv struct {
@@ -16,6 +18,13 @@ func NewAuthSrv() *AuthSrv {
 	}
 }
 
-func (authSrv *AuthSrv) Signup(signupData dtos.UserSignupDto) (db.User, error) {
+const BCRYPT_COST = 14
+
+func (authSrv *AuthSrv) Signup(signupData dto_req.UserSignupDto) (db.User, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(signupData.Password), BCRYPT_COST)
+	if err != nil {
+		return db.User{}, err
+	}
+	signupData.Password = string(hashedPassword)
 	return authSrv.UserRepo.CreateUser(signupData)
 }

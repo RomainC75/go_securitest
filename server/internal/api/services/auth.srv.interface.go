@@ -2,9 +2,9 @@ package services
 
 import (
 	db "server/db/sqlc"
-	"server/internal/api/dtos"
+	dto_req "server/internal/api/dtos/requests"
 )
 
 type IAuthSrv interface {
-	Signup(signupData dtos.UserSignupDto) (db.User, error)
+	Signup(signupData dto_req.UserSignupDto) (db.User, error)
 }

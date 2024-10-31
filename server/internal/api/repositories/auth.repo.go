@@ -3,7 +3,7 @@ package repositories
 import (
 	"context"
 	db "server/db/sqlc"
-	"server/internal/api/dtos"
+	dto_req "server/internal/api/dtos/requests"
 	"server/utils"
 )
 
@@ -17,7 +17,7 @@ func NewAuthRepo() *UserRepo {
 	}
 }
 
-func (userRepo *UserRepo) CreateUser(signupData dtos.UserSignupDto) (db.User, error) {
+func (userRepo *UserRepo) CreateUser(signupData dto_req.UserSignupDto) (db.User, error) {
 	ctx := context.Background()
 
 	createdUser := db.CreateUserParams{
