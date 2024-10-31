@@ -6,5 +6,5 @@ import (
 )
 
 type IAuthSrv interface {
-	Signup(signupData dto_req.UserSignupDto) (db.User, error)
+	Signup(signupData dto_req.UserSignupDto) (db.User, string, error)
 }

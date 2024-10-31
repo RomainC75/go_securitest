@@ -1,7 +1,6 @@
 package dto_res
 
-type UserSignupDto struct {
-	Id    string `json:"id"`
+type UserSignupDtoRes struct {
+	Id    int64  `json:"id"`
 	Email string `json:"email"`
-	Token string `json:"token"`
 }

@@ -9,6 +9,6 @@ var VarList = []config.ConfigVar{
 	"POSTGRES_HOST",
 	"POSTGRES_PORT",
 
-	// "SERVER_HOST",
 	"SERVER_PORT",
+	"SERVER_JWT_SECRET",
 }

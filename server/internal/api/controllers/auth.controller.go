@@ -2,8 +2,10 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	dto_req "server/internal/api/dtos/requests"
+	dto_res "server/internal/api/dtos/responses"
 	"server/internal/api/services"
 	"server/utils"
 
@@ -31,8 +33,9 @@ func (c *AuthController) HandleAuthSignup(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	createdUser, err := c.AuthSrv.Signup(u)
+	createdUser, tokenString, err := c.AuthSrv.Signup(u)
 	if err != nil {
+		fmt.Println("3")
 		utils.SendError(w, 401, err)
 		return
 	}
@@ -40,7 +43,12 @@ func (c *AuthController) HandleAuthSignup(w http.ResponseWriter, r *http.Request
 	// err := validate.Struct(mystruct)
 	// validationErrors := err.(validator.ValidationErrors)
 	utils.SendJson(w, 200, map[string]any{
-		"message": createdUser,
+		"message": "created",
+		"user": dto_res.UserSignupDtoRes{
+			Id:    createdUser.ID,
+			Email: createdUser.Email,
+		},
+		"token": tokenString,
 	})
 }
 

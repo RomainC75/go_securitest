@@ -29,6 +29,7 @@ services:
       - POSTGRES_HOST=${POSTGRES_HOST}
       - POSTGRES_PORT=${POSTGRES_PORT}
       - SERVER_PORT=${SERVER_PORT}
+      - SERVER_JWT_SECRET=${SERVER_JWT_SECRET}
     ports:
       - '3000:${SERVER_PORT}'
     volumes:
