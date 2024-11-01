@@ -42,7 +42,7 @@ func (c *AuthController) HandleAuthSignup(w http.ResponseWriter, r *http.Request
 
 	// err := validate.Struct(mystruct)
 	// validationErrors := err.(validator.ValidationErrors)
-	utils.SendJson(w, 200, map[string]any{
+	utils.SendJson(w, http.StatusCreated, map[string]any{
 		"message": "created",
 		"user": dto_res.UserSignupDtoRes{
 			Id:    createdUser.ID,
@@ -62,11 +62,11 @@ func (c *AuthController) HandleAuthLogin(w http.ResponseWriter, r *http.Request)
 
 	foundUser, token, err := c.AuthSrv.Login(u)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
 
-	utils.SendJson(w, 200, map[string]any{
+	utils.SendJson(w, http.StatusOK, map[string]any{
 		"message": "created",
 		"user": dto_res.UserSignupDtoRes{
 			Id:    foundUser.ID,
