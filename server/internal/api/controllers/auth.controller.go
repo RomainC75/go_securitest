@@ -75,3 +75,14 @@ func (c *AuthController) HandleAuthLogin(w http.ResponseWriter, r *http.Request)
 		"token": token,
 	})
 }
+
+func (c *AuthController) HandleWhoAmI(w http.ResponseWriter, r *http.Request) {
+	var u dto_req.UserCredsDto
+
+	err := json.NewDecoder(r.Body).Decode(&u)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+}
