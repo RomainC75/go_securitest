@@ -10,7 +10,7 @@ func AuthRoutes(mux *http.ServeMux) {
 	controllers := controllers.NewAuthController()
 	mux.HandleFunc("POST /auth/signup", controllers.HandleAuthSignup)
 	mux.HandleFunc("POST /auth/login", controllers.HandleAuthLogin)
-	mux.Handle("POST /auth/whoami",
+	mux.Handle("GET /auth/whoami",
 		middlewares.AuthMiddleware(
 			http.HandlerFunc(controllers.HandleWhoAmI),
 		),

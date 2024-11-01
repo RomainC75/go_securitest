@@ -24,9 +24,17 @@ func GenerateToken(user db.User) (string, error) {
 	return token.SignedString([]byte(jwtSecret))
 }
 
-func ParseToken(tokenString string) (*jwt.Token, error) {
+func ParseToken(tokenString string) (jwt.MapClaims, error) {
 	jwtSecret := viper.GetString(string(config.SERVER_JWT_SECRET))
-	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return jwtSecret, nil
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return []byte(jwtSecret), nil
 	})
+
+	if err != nil {
+		return nil, err
+	}
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return claims, nil
+	}
+	return nil, err
 }

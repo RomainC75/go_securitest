@@ -77,12 +77,13 @@ func (c *AuthController) HandleAuthLogin(w http.ResponseWriter, r *http.Request)
 }
 
 func (c *AuthController) HandleWhoAmI(w http.ResponseWriter, r *http.Request) {
-	var u dto_req.UserCredsDto
+	id := (r.Context().Value("user_id")).(int64)
+	email := (r.Context().Value("user_email")).(string)
 
-	err := json.NewDecoder(r.Body).Decode(&u)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
+	utils.SendJson(w, http.StatusOK, map[string]any{
+		"user": dto_res.UserSignupDtoRes{
+			Id:    id,
+			Email: email,
+		},
+	})
 }
