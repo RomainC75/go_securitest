@@ -2,9 +2,11 @@ package middlewares
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"server/utils"
 	"strings"
+	"time"
 )
 
 func AuthMiddleware(next http.Handler) http.Handler {
@@ -23,7 +25,16 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		utils.PrettyDisplay("claims : ", claims)
+		dates := claims["date"].(map[string]interface{})
+		expiresAt := int64(dates["expiresAt"].(float64))
+		fmt.Println(expiresAt)
+
+		durationSiceExpire := time.Since(time.Unix(expiresAt, 0))
+		durationSec := durationSiceExpire.Seconds()
+		if durationSec > 0 {
+			http.Error(w, "token expired", http.StatusBadRequest)
+			return
+		}
 
 		ctx := context.WithValue(r.Context(), "user_email", claims["email"])
 		ctx = context.WithValue(ctx, "user_id", int64(claims["id"].(float64)))

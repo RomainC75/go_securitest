@@ -16,7 +16,7 @@ func GenerateToken(user db.User) (string, error) {
 		"email": user.Email,
 		"date": jwt.MapClaims{
 			"createdAt": now.Unix(),
-			"expiresAt": now.Add(time.Second * 2).Unix(),
+			"expiresAt": now.Add(time.Hour * 24).Unix(),
 		},
 	})
 
