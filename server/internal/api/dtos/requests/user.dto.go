@@ -1,6 +1,6 @@
 package dto_req
 
-type UserSignupDto struct {
+type UserCredsDto struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }

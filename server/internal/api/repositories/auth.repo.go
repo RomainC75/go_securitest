@@ -4,7 +4,6 @@ import (
 	"context"
 	db "server/db/sqlc"
 	dto_req "server/internal/api/dtos/requests"
-	"server/utils"
 )
 
 type UserRepo struct {
@@ -17,13 +16,17 @@ func NewAuthRepo() *UserRepo {
 	}
 }
 
-func (userRepo *UserRepo) CreateUser(signupData dto_req.UserSignupDto) (db.User, error) {
+func (userRepo *UserRepo) CreateUser(signupData dto_req.UserCredsDto) (db.User, error) {
 	ctx := context.Background()
 
 	createdUser := db.CreateUserParams{
 		Email:    signupData.Email,
 		Password: signupData.Password,
 	}
-	utils.PrettyDisplay("createUser", createdUser)
 	return (*userRepo.Store).CreateUser(ctx, createdUser)
+}
+
+func (userRepo *UserRepo) GetUser(email string) (db.User, error) {
+	ctx := context.Background()
+	return (*userRepo.Store).GetUser(ctx, email)
 }

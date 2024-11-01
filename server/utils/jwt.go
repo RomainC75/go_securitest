@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	db "server/db/sqlc"
 	"shared/config"
 	"time"
@@ -22,4 +23,18 @@ func GenerateToken(user db.User) (string, error) {
 
 	jwtSecret := viper.GetString(string(config.SERVER_JWT_SECRET))
 	return token.SignedString([]byte(jwtSecret))
+}
+
+func ParseToken(tokenString string) {
+	jwtSecret := viper.GetString(string(config.SERVER_JWT_SECRET))
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return jwtSecret, nil
+	})
+
+	if err != nil {
+		fmt.Println("err : ", err.Error())
+	}
+
+	PrettyDisplay("token : ", token)
+
 }

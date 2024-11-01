@@ -6,5 +6,6 @@ import (
 )
 
 type IAuthRepo interface {
-	CreateUser(signupData dto_req.UserSignupDto) (db.User, error)
+	CreateUser(signupData dto_req.UserCredsDto) (db.User, error)
+	GetUser(email string) (db.User, error)
 }
