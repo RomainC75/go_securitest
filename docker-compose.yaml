@@ -68,8 +68,8 @@ services:
       - POSTGRES_PORT=${POSTGRES_PORT}
       - SERVER_PORT=${SERVER_PORT}
       - SERVER_JWT_SECRET=${SERVER_JWT_SECRET}
-      - KAFKA_TOPIC={KAFKA_TOPIC}
-      - KAFKA_URL={KAFKA_URL}
+      - KAFKA_TOPIC=${KAFKA_TOPIC}
+      - KAFKA_URL=${KAFKA_URL}
       - KAFKA_CONSUMER_GROUP_ID=${KAFKA_CONSUMER_GROUP_ID}
     ports:
       - '3000:${SERVER_PORT}'
@@ -81,7 +81,8 @@ services:
         - action: sync+restart
           path: ./server
           target: /usr/src/app
-    # platform: linux/amd64
+    #  for kafka !!
+    platform: linux/amd64
     depends_on:
       - db
 
