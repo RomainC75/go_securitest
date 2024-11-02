@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
@@ -43,7 +44,7 @@ func main() {
 	topic := viper.GetString(string(config.KAFKA_TOPIC))
 	err = c.SubscribeTopics([]string{topic}, nil)
 
-	// Set up a channel for handling Ctrl-C, etc
+	// Ctrl+C
 	sigchan := make(chan os.Signal, 1)
 	signal.Notify(sigchan, syscall.SIGINT, syscall.SIGTERM)
 
@@ -52,7 +53,7 @@ func main() {
 	for run {
 		select {
 		case sig := <-sigchan:
-			fmt.Printf("Caught signal %v: terminating\n", sig)
+			logrus.Errorf("Caught signal %v: terminating\n", sig)
 			run = false
 		default:
 			ev, err := c.ReadMessage(100 * time.Millisecond)
@@ -60,7 +61,7 @@ func main() {
 				// Errors are informational and automatically handled by the consumer
 				continue
 			}
-			fmt.Printf("Consumed event from topic %s: key = %-10s value = %s\n",
+			logrus.Warnf("Consumed event from topic %s: key = %-10s value = %s\n",
 				*ev.TopicPartition.Topic, string(ev.Key), string(ev.Value))
 		}
 	}
