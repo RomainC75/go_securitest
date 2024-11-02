@@ -20,7 +20,7 @@ func NewAuthSrv() *AuthSrv {
 	}
 }
 
-const BCRYPT_COST = 14
+const BCRYPT_COST = 2
 
 func (authSrv *AuthSrv) Signup(signupData dto_req.UserCredsDto) (db.User, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(signupData.Password), BCRYPT_COST)

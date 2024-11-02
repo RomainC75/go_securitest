@@ -6,6 +6,7 @@ import (
 	"server/conf"
 	db "server/db/sqlc"
 	"server/internal/api"
+	validator_helper "server/internal/api/dtos/validator"
 	"server/internal/api/routing"
 	"server/internal/queue"
 	"shared/config"
@@ -18,8 +19,9 @@ import (
 
 func Bootstrap() {
 	fmt.Println("==BOOTSTRAP==")
-	config.Set(conf.VarList)
 
+	validator_helper.SetValidate()
+	config.Set(conf.VarList)
 	db.Connect()
 
 	envMp := map[config.ConfigVar]string{
