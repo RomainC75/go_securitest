@@ -2,27 +2,53 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
-	dto_req "server/internal/api/dtos/requests"
+	validator_helper "server/internal/api/dtos/validator"
 	"server/internal/queue"
+	shared_dto "shared/dto"
+	"shared/utils"
+	"strconv"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/sirupsen/logrus"
 )
 
 type AnalyseCtrl struct {
 	Queue *queue.SQueue
+	v     *validator.Validate
 }
 
 func NewAnalyseCtrl() *AnalyseCtrl {
 	return &AnalyseCtrl{
 		Queue: queue.GetQueue(),
+		v:     validator_helper.GetValidate(),
 	}
 }
 
 func (c *AnalyseCtrl) HandleAnalyse(w http.ResponseWriter, r *http.Request) {
-	var u dto_req.UserCredsDto
+	workCode := r.PathValue("scenario")
+	scenarioNum, err := strconv.Atoi(workCode)
+	if err != nil {
+		http.Error(w, "scan scenario should be a number", http.StatusBadRequest)
+		return
+	}
+	fmt.Println("=> WK ! ", scenarioNum)
 
-	err := json.NewDecoder(r.Body).Decode(&u)
+	var u shared_dto.FullPortTestScenario
+
+	err = json.NewDecoder(r.Body).Decode(&u)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	err = c.v.Struct(u)
+	if err != nil {
+		logrus.Warnf("validator error : %s \n", err.Error())
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	utils.PrettyDisplay("body ", u)
 }

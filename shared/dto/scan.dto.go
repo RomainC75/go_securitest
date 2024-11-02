@@ -1,4 +1,4 @@
-package dto
+package shared_dto
 
 type ScenarioBase struct {
 	BasicData string `json:"basic_data" validate:"required"`

@@ -15,6 +15,7 @@ func ConnectRoutes() *http.ServeMux {
 
 	routes.OpenRoutes(mux)
 	routes.AuthRoutes(mux)
+	routes.AnalyseRoutes(mux)
 
 	return mux
 

@@ -8,7 +8,7 @@ import (
 
 func AnalyseRoutes(mux *http.ServeMux) {
 	controllers := controllers.NewAnalyseCtrl()
-	mux.Handle("POST /analyse/",
+	mux.Handle("POST /scan/{scenario}",
 		middlewares.AuthMiddleware(
 			http.HandlerFunc(controllers.HandleAnalyse),
 		),
