@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	validator_helper "server/internal/api/dtos/validator"
+	"server/internal/api/services"
 	"server/internal/queue"
 	shared_dto "shared/dto"
 	"shared/utils"
@@ -15,20 +16,23 @@ import (
 )
 
 type AnalyseCtrl struct {
-	Queue *queue.SQueue
-	v     *validator.Validate
+	Queue   *queue.SQueue
+	v       *validator.Validate
+	scanSrv *services.ScanSrv
 }
 
 func NewAnalyseCtrl() *AnalyseCtrl {
 	return &AnalyseCtrl{
-		Queue: queue.GetQueue(),
-		v:     validator_helper.GetValidate(),
+		Queue:   queue.GetQueue(),
+		v:       validator_helper.GetValidate(),
+		scanSrv: services.NewScanSrv(),
 	}
 }
 
 func (c *AnalyseCtrl) HandleAnalyse(w http.ResponseWriter, r *http.Request) {
 	workCode := r.PathValue("scenario")
 	scenarioNum, err := strconv.Atoi(workCode)
+
 	if err != nil {
 		http.Error(w, "scan scenario should be a number", http.StatusBadRequest)
 		return
@@ -51,4 +55,7 @@ func (c *AnalyseCtrl) HandleAnalyse(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.PrettyDisplay("body ", u)
+
+	err = c.scanSrv.HandleScan(scenarioNum, u)
+	logrus.Warnf("err : %s \n", err.Error())
 }
