@@ -6,7 +6,7 @@ import (
 	"net"
 	shared_dto "shared/dto"
 	"shared/helpers"
-	"shared/utils"
+	shared_utils "shared/utils"
 	"sync"
 	"time"
 
@@ -49,7 +49,7 @@ func (s *Scan) Check() error {
 
 func (s *Scan) Run() (interface{}, error) {
 	logrus.Warn("=> scan beginning")
-	utils.PrettyDisplay("SCAN : ", s.payload)
+	shared_utils.PrettyDisplay("SCAN : ", s.payload)
 
 	portResponses := PortResponseMap{}
 
@@ -57,10 +57,10 @@ func (s *Scan) Run() (interface{}, error) {
 	resultChan := make(chan Analysis)
 	done := make(chan int)
 	goMerger(portResponses, resultChan, done)
-	utils.PrettyDisplay("SCAN22 : ", s.payload)
+	shared_utils.PrettyDisplay("SCAN22 : ", s.payload)
 	addresses, err := helpers.ExtractIpAddressesFromRange(s.payload.IPRange)
 
-	utils.PrettyDisplay("ADDRESSES : ", addresses)
+	shared_utils.PrettyDisplay("ADDRESSES : ", addresses)
 	if err != nil {
 		return ScanResult{}, err
 	}

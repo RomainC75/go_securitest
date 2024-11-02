@@ -1,14 +1,14 @@
 package queue
 
 type SQueue struct {
-	strategy IStrategy
+	Strategy IStrategy
 }
 
 var queueInstance *SQueue
 
 func SetQueue(strategy IStrategy) {
 	queueInstance = &SQueue{
-		strategy: strategy,
+		Strategy: strategy,
 	}
 }
 

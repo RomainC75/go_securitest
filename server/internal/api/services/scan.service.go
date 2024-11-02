@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"server/internal/queue"
 	shared_dto "shared/dto"
 )
@@ -15,12 +16,17 @@ func NewScanSrv() *ScanSrv {
 	}
 }
 
-func (s *ScanSrv) HandleScan(scenario int, reqData shared_dto.FullPortTestScenario) error {
-
-	switch scenario {
-	case 1:
-
+func (ss *ScanSrv) HandleScan(scenario int, reqData shared_dto.FullPortTestScenario) error {
+	b, err := json.Marshal(reqData)
+	if err != nil {
+		return err
 	}
+
+	ss.q.Strategy.Push("azerty", b)
+	// switch scenario {
+	// case 1:
+
+	// }
 
 	return nil
 }
