@@ -1,6 +1,7 @@
 package kafka_helper
 
 import (
+	"fmt"
 	"shared/config"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
@@ -40,7 +41,23 @@ func createProducer(env map[config.ConfigVar]string) (*kafka.Producer, error) {
 	if err != nil {
 		logrus.Warnf("Failed to create producer: %s", err)
 		// os.Exit(1)
+		return nil, err
 	}
+
+	go func() {
+		for e := range p.Events() {
+			switch ev := e.(type) {
+			case *kafka.Message:
+				if ev.TopicPartition.Error != nil {
+					fmt.Printf("Failed to deliver message: %v\n", ev.TopicPartition)
+				} else {
+					fmt.Printf("Produced event to topic %s: key = %-10s value = %s\n",
+						*ev.TopicPartition.Topic, string(ev.Key), string(ev.Value))
+				}
+			}
+		}
+	}()
+
 	return p, err
 }
 
@@ -61,4 +78,5 @@ func createConsumer(env map[config.ConfigVar]string) (*kafka.Consumer, error) {
 	topic := env[config.KAFKA_TOPIC]
 	err = c.SubscribeTopics([]string{topic}, nil)
 	return c, err
+
 }

@@ -7,8 +7,9 @@ import (
 	validator_helper "server/internal/api/dtos/validator"
 	"server/internal/api/services"
 	"server/internal/queue"
+	"server/utils"
 	shared_dto "shared/dto"
-	"shared/utils"
+	shared_utils "shared/utils"
 	"strconv"
 
 	"github.com/go-playground/validator/v10"
@@ -54,8 +55,14 @@ func (c *AnalyseCtrl) HandleAnalyse(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.PrettyDisplay("body ", u)
+	shared_utils.PrettyDisplay("body ", u)
 
 	err = c.scanSrv.HandleScan(scenarioNum, u)
-	logrus.Warnf("err : %s \n", err.Error())
+	if err != nil {
+		logrus.Warnf("err : %s \n", err.Error())
+	}
+
+	utils.SendJson(w, http.StatusOK, map[string]any{
+		"message": "/analyse",
+	})
 }

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net"
-	"shared/dto"
+	shared_dto "shared/dto"
 	"shared/helpers"
 	"shared/utils"
 	"sync"
@@ -14,10 +14,10 @@ import (
 )
 
 type Scan struct {
-	payload dto.PortTestScenario
+	payload shared_dto.PortTestScenario
 }
 
-func NewScan(payload dto.PortTestScenario) *Scan {
+func NewScan(payload shared_dto.PortTestScenario) *Scan {
 	return &Scan{
 		payload: payload,
 	}

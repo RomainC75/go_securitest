@@ -1,6 +1,6 @@
 package queue
 
 type IStrategy interface {
-	Push()
+	Push(key string, data []byte)
 	Listen()
 }

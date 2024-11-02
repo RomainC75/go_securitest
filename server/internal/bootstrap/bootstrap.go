@@ -11,7 +11,7 @@ import (
 	"server/internal/queue"
 	"shared/config"
 	"shared/helpers/kafka_helper"
-	"shared/utils"
+	shared_utils "shared/utils"
 
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -30,7 +30,7 @@ func Bootstrap() {
 		config.KAFKA_CONSUMER_GROUP_ID: viper.GetString(string(config.KAFKA_CONSUMER_GROUP_ID)),
 	}
 
-	utils.PrettyDisplay("envMp", envMp)
+	shared_utils.PrettyDisplay("envMp", envMp)
 
 	kafkaEnv, err := kafka_helper.NewKafkaHandler(envMp)
 	if err != nil {
