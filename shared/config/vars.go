@@ -12,4 +12,8 @@ const (
 	SERVER_HOST       ConfigVar = "SERVER_HOST"
 	SERVER_PORT       ConfigVar = "SERVER_PORT"
 	SERVER_JWT_SECRET ConfigVar = "SERVER_JWT_SECRET"
+
+	KAFKA_TOPIC             ConfigVar = "KAFKA_TOPIC"
+	KAFKA_URL               ConfigVar = "KAFKA_URL"
+	KAFKA_CONSUMER_GROUP_ID ConfigVar = "KAFKA_CONSUMER_GROUP_ID"
 )
