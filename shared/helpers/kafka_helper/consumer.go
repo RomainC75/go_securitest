@@ -28,6 +28,7 @@ func (kh *KafkaHandler) Listen() {
 			fmt.Printf("Consumed event from topic %s: key = %-10s value = %s\n",
 				*ev.TopicPartition.Topic, string(ev.Key), string(ev.Value))
 		}
+		fmt.Println("listen ")
 	}
 
 	kh.c.Close()

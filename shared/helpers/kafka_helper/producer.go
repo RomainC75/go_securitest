@@ -7,7 +7,7 @@ import (
 func (kh *KafkaHandler) Push(key string, data []byte) {
 
 	kh.p.Produce(&kafka.Message{
-		TopicPartition: kafka.TopicPartition{Topic: &kh.t, Partition: kafka.PartitionAny},
+		TopicPartition: kafka.TopicPartition{Topic: &kh.topicToProduce, Partition: kafka.PartitionAny},
 		Key:            []byte(key),
 		Value:          []byte(data),
 	}, nil)

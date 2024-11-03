@@ -13,7 +13,8 @@ const (
 	SERVER_PORT       ConfigVar = "SERVER_PORT"
 	SERVER_JWT_SECRET ConfigVar = "SERVER_JWT_SECRET"
 
-	KAFKA_TOPIC             ConfigVar = "KAFKA_TOPIC"
+	KAFKA_TOPIC_REQ         ConfigVar = "KAFKA_TOPIC_REQ"
+	KAFKA_TOPIC_RES         ConfigVar = "KAFKA_TOPIC_RES"
 	KAFKA_URL               ConfigVar = "KAFKA_URL"
 	KAFKA_CONSUMER_GROUP_ID ConfigVar = "KAFKA_CONSUMER_GROUP_ID"
 )

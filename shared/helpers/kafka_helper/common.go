@@ -9,26 +9,26 @@ import (
 )
 
 type KafkaHandler struct {
-	p *kafka.Producer
-	c *kafka.Consumer
-	t string
+	p              *kafka.Producer
+	c              *kafka.Consumer
+	topicToProduce string
 }
 
-func NewKafkaHandler(env map[config.ConfigVar]string) (*KafkaHandler, error) {
+func NewKafkaHandler(topicToProduce string, topicToConsume string, env map[config.ConfigVar]string) (*KafkaHandler, error) {
 	newP, err := createProducer(env)
 	if err != nil {
 		return nil, err
 	}
 
-	newC, err := createConsumer(env)
+	newC, err := createConsumer(topicToConsume, env)
 	if err != nil {
 		return nil, err
 	}
 
 	return &KafkaHandler{
-		p: newP,
-		c: newC,
-		t: env[config.KAFKA_TOPIC],
+		p:              newP,
+		c:              newC,
+		topicToProduce: topicToProduce,
 	}, nil
 }
 
@@ -61,7 +61,7 @@ func createProducer(env map[config.ConfigVar]string) (*kafka.Producer, error) {
 	return p, err
 }
 
-func createConsumer(env map[config.ConfigVar]string) (*kafka.Consumer, error) {
+func createConsumer(topicToConsume string, env map[config.ConfigVar]string) (*kafka.Consumer, error) {
 	conf := kafka.ConfigMap{
 		"bootstrap.servers": env[config.KAFKA_URL],
 	}
@@ -75,8 +75,7 @@ func createConsumer(env map[config.ConfigVar]string) (*kafka.Consumer, error) {
 		// os.Exit(1)
 		return nil, err
 	}
-	topic := env[config.KAFKA_TOPIC]
-	err = c.SubscribeTopics([]string{topic}, nil)
+	err = c.SubscribeTopics([]string{topicToConsume}, nil)
 	return c, err
 
 }

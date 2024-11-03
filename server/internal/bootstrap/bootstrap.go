@@ -26,13 +26,17 @@ func Bootstrap() {
 
 	envMp := map[config.ConfigVar]string{
 		config.KAFKA_URL:               viper.GetString(string(config.KAFKA_URL)),
-		config.KAFKA_TOPIC:             viper.GetString(string(config.KAFKA_TOPIC)),
+		config.KAFKA_TOPIC_REQ:         viper.GetString(string(config.KAFKA_TOPIC_REQ)),
 		config.KAFKA_CONSUMER_GROUP_ID: viper.GetString(string(config.KAFKA_CONSUMER_GROUP_ID)),
 	}
 
 	shared_utils.PrettyDisplay("envMp", envMp)
 
-	kafkaEnv, err := kafka_helper.NewKafkaHandler(envMp)
+	kafkaEnv, err := kafka_helper.NewKafkaHandler(
+		viper.GetString(string(config.KAFKA_TOPIC_REQ)),
+		viper.GetString(string(config.KAFKA_TOPIC_RES)),
+		envMp,
+	)
 	if err != nil {
 		logrus.Errorf("boostrap error : ", err.Error())
 		os.Exit(1)
