@@ -5,9 +5,12 @@ import (
 )
 
 type Querier interface {
+	CreateScan(ctx context.Context, arg CreateScanParams) (int64, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	DeleteUser(ctx context.Context, email string) error
+	GetScan(ctx context.Context, id int64) (GetScanRow, error)
 	GetUser(ctx context.Context, email string) (User, error)
+	ListScansByUser(ctx context.Context, userID int64) ([]ListScansByUserRow, error)
 	ListUsers(ctx context.Context) ([]User, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error)
 }
