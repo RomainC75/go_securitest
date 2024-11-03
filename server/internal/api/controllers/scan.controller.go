@@ -16,21 +16,21 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type AnalyseCtrl struct {
+type ScanCtrl struct {
 	Queue   *queue.SQueue
 	v       *validator.Validate
 	scanSrv *services.ScanSrv
 }
 
-func NewAnalyseCtrl() *AnalyseCtrl {
-	return &AnalyseCtrl{
+func NewScanCtrl() *ScanCtrl {
+	return &ScanCtrl{
 		Queue:   queue.GetQueue(),
 		v:       validator_helper.GetValidate(),
 		scanSrv: services.NewScanSrv(),
 	}
 }
 
-func (c *AnalyseCtrl) HandleAnalyse(w http.ResponseWriter, r *http.Request) {
+func (c *ScanCtrl) HandleScan(w http.ResponseWriter, r *http.Request) {
 	workCode := r.PathValue("scenario")
 	scenarioNum, err := strconv.Atoi(workCode)
 
@@ -40,7 +40,7 @@ func (c *AnalyseCtrl) HandleAnalyse(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println("=> WK ! ", scenarioNum)
 
-	var u shared_dto.FullPortTestScenario
+	var u shared_dto.FullPortTestScenarioReq
 
 	err = json.NewDecoder(r.Body).Decode(&u)
 	if err != nil {

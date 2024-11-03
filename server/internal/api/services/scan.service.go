@@ -16,7 +16,7 @@ func NewScanSrv() *ScanSrv {
 	}
 }
 
-func (ss *ScanSrv) HandleScan(scenario int, reqData shared_dto.FullPortTestScenario) error {
+func (ss *ScanSrv) HandleScan(scenario int, reqData shared_dto.FullPortTestScenarioReq) error {
 	b, err := json.Marshal(reqData)
 	if err != nil {
 		return err

@@ -7,10 +7,10 @@ import (
 )
 
 func AnalyseRoutes(mux *http.ServeMux) {
-	controllers := controllers.NewAnalyseCtrl()
+	controllers := controllers.NewScanCtrl()
 	mux.Handle("POST /scan/{scenario}",
 		middlewares.AuthMiddleware(
-			http.HandlerFunc(controllers.HandleAnalyse),
+			http.HandlerFunc(controllers.HandleScan),
 		),
 	)
 }

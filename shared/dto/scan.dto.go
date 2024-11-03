@@ -1,5 +1,21 @@
 package shared_dto
 
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
+type Event struct {
+	Id        uuid.UUID               `json:"id" validate:"required"`
+	CreatedAt time.Time               `json:"createdAt" validate:"required"`
+	Content   FullPortTestScenarioReq `json:"content" validate:"required"`
+}
+
+type FullPortTestScenarioReq struct {
+	ScenarioBase
+	PortTestScenario PortTestScenario `json:"scenario" validate:"required"`
+}
 type ScenarioBase struct {
 	BasicData string `json:"basic_data" validate:"required"`
 }
@@ -7,11 +23,6 @@ type ScenarioBase struct {
 type NetworkDiscover struct {
 	ScenarioBase
 	Range IpRange `json:"ip_range" validate:"required"`
-}
-
-type FullPortTestScenario struct {
-	ScenarioBase
-	PortTestScenario PortTestScenario `json:"scenario" validate:"required"`
 }
 
 type PortTestScenario struct {
@@ -26,6 +37,6 @@ type IpRange struct {
 }
 
 type Range struct {
-	Min int `json:"min" validate:"required"`
-	Max int `json:"max" validate:"required"`
+	Min int `json:"min" validate:"required,number"`
+	Max int `json:"max" validate:"required,number"`
 }
