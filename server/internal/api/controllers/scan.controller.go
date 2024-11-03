@@ -31,6 +31,8 @@ func NewScanCtrl() *ScanCtrl {
 }
 
 func (c *ScanCtrl) HandleScan(w http.ResponseWriter, r *http.Request) {
+	userId := (r.Context().Value("user_id")).(int64)
+
 	workCode := r.PathValue("scenario")
 	scenarioNum, err := strconv.Atoi(workCode)
 
@@ -57,7 +59,7 @@ func (c *ScanCtrl) HandleScan(w http.ResponseWriter, r *http.Request) {
 
 	shared_utils.PrettyDisplay("body ", u)
 
-	err = c.scanSrv.HandleScan(scenarioNum, u)
+	err = c.scanSrv.CreateScan(int(userId), scenarioNum, u)
 	if err != nil {
 		logrus.Warnf("err : %s \n", err.Error())
 	}

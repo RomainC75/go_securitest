@@ -20,13 +20,13 @@ WITH inserted_scan AS (
 inserted_port_ranges AS (
     INSERT INTO port_ranges (scan_id, range_min, range_max)
     VALUES (id, $3, $4)
-    RETURNING id
+    RETURNING scan_id
 ),
 inserted_ip_ranges AS (
     INSERT INTO ip_ranges (scan_id, ip_min, ip_max, is_unique)
     VALUES (id, $5, $6, $7)
 )
-SELECT * FROM inserted_scan;
+SELECT * FROM scans WHERE id = (SELECT id FROM inserted_scan);
 
 -- -- name: DeleteUser :exec
 -- DELETE FROM users

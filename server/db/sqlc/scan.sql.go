@@ -15,13 +15,13 @@ WITH inserted_scan AS (
 inserted_port_ranges AS (
     INSERT INTO port_ranges (scan_id, range_min, range_max)
     VALUES (id, $3, $4)
-    RETURNING id
+    RETURNING scan_id
 ),
 inserted_ip_ranges AS (
     INSERT INTO ip_ranges (scan_id, ip_min, ip_max, is_unique)
     VALUES (id, $5, $6, $7)
 )
-SELECT id FROM inserted_scan
+SELECT id, user_id, scenario, created_at, updated_at FROM scans WHERE id = (SELECT id FROM inserted_scan)
 `
 
 type CreateScanParams struct {
@@ -34,7 +34,7 @@ type CreateScanParams struct {
 	IsUnique sql.NullBool   `json:"isUnique"`
 }
 
-func (q *Queries) CreateScan(ctx context.Context, arg CreateScanParams) (int64, error) {
+func (q *Queries) CreateScan(ctx context.Context, arg CreateScanParams) (Scan, error) {
 	row := q.db.QueryRowContext(ctx, createScan,
 		arg.UserID,
 		arg.Scenario,
@@ -44,9 +44,15 @@ func (q *Queries) CreateScan(ctx context.Context, arg CreateScanParams) (int64, 
 		arg.IpMax,
 		arg.IsUnique,
 	)
-	var id int64
-	err := row.Scan(&id)
-	return id, err
+	var i Scan
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Scenario,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
 }
 
 const getScan = `-- name: GetScan :one

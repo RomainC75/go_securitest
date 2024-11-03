@@ -16,7 +16,7 @@ func NewScanRepo() *ScanRepo {
 	}
 }
 
-func (scanRepo *ScanRepo) CreateScan(userId int64, scenario int, scanData shared_dto.FullPortTestScenarioReq) (int64, error) {
+func (scanRepo *ScanRepo) CreateScan(userId int64, scenario int, scanData shared_dto.FullPortTestScenarioReq) (db.Scan, error) {
 	ctx := context.Background()
 
 	scanToCreate := db.CreateScanParams{
