@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"server/internal/queue"
 	shared_dto "shared/dto"
+	"time"
+
+	"github.com/google/uuid"
 )
 
 type ScanSrv struct {
@@ -17,16 +20,18 @@ func NewScanSrv() *ScanSrv {
 }
 
 func (ss *ScanSrv) HandleScan(scenario int, reqData shared_dto.FullPortTestScenarioReq) error {
-	b, err := json.Marshal(reqData)
+	eventReqData := shared_dto.Event{
+		Id:        uuid.New(),
+		CreatedAt: time.Now(),
+		Content:   reqData,
+	}
+
+	b, err := json.Marshal(eventReqData)
 	if err != nil {
 		return err
 	}
 
 	ss.q.Strategy.Push("azerty", b)
-	// switch scenario {
-	// case 1:
-
-	// }
 
 	return nil
 }
