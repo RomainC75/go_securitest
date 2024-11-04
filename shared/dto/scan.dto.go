@@ -25,8 +25,8 @@ type NetworkDiscover struct {
 }
 
 type PortTestScenario struct {
-	IPRange   IpRange `json:"ip_range" validate:"required"`
-	PortRange Range   `json:"range" validate:"required"`
+	IPRange   IpRange   `json:"ip_range" validate:"required"`
+	PortRange PortRange `json:"port_range" validate:"required"`
 }
 
 type IpRange struct {
@@ -35,7 +35,7 @@ type IpRange struct {
 	Unique bool           `json:"unique" validate:"boolean"`
 }
 
-type Range struct {
+type PortRange struct {
 	Min int           `json:"min" validate:"required,number"`
-	Max sql.NullInt32 `json:"max" validate:"required,number"`
+	Max sql.NullInt32 `json:"max" validate:"number"`
 }
