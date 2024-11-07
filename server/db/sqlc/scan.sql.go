@@ -14,12 +14,12 @@ WITH inserted_scan AS (
 ),
 inserted_port_ranges AS (
     INSERT INTO port_ranges (scan_id, range_min, range_max)
-    VALUES (inserted_scan.id, $3, $4)
+    VALUES ((SELECT id FROM inserted_scan), $3, $4)
     RETURNING scan_id
 ),
 inserted_ip_ranges AS (
     INSERT INTO ip_ranges (scan_id, ip_min, ip_max, is_unique)
-    VALUES (id, $5, $6, $7)
+    VALUES ((SELECT id FROM inserted_scan), $5, $6, $7)
 )
 SELECT id, user_id, scenario, created_at, updated_at FROM scans WHERE id = (SELECT id FROM inserted_scan)
 `
@@ -56,49 +56,21 @@ func (q *Queries) CreateScan(ctx context.Context, arg CreateScanParams) (Scan, e
 }
 
 const getScan = `-- name: GetScan :one
-SELECT scans.id, user_id, scenario, created_at, updated_at, port_ranges.id, port_ranges.scan_id, range_min, range_max, port_ranges.is_unique, ip_ranges.id, ip_ranges.scan_id, ip_min, ip_max, ip_ranges.is_unique FROM scans
-LEFT JOIN port_ranges ON scans.id = port_ranges.scan_id
-LEFT JOIN ip_ranges ON scans.id = ip_ranges.scan_id
-WHERE scans.id = $1 LIMIT 1
+SELECT id, user_id, scenario, created_at, updated_at FROM scans
+WHERE scans.user_id = $1 LIMIT 1
 `
 
-type GetScanRow struct {
-	ID         int64          `json:"id"`
-	UserID     int64          `json:"userId"`
-	Scenario   int32          `json:"scenario"`
-	CreatedAt  time.Time      `json:"createdAt"`
-	UpdatedAt  time.Time      `json:"updatedAt"`
-	ID_2       sql.NullInt64  `json:"id2"`
-	ScanID     sql.NullInt64  `json:"scanId"`
-	RangeMin   sql.NullInt32  `json:"rangeMin"`
-	RangeMax   sql.NullInt32  `json:"rangeMax"`
-	IsUnique   sql.NullBool   `json:"isUnique"`
-	ID_3       sql.NullInt64  `json:"id3"`
-	ScanID_2   sql.NullInt64  `json:"scanId2"`
-	IpMin      sql.NullString `json:"ipMin"`
-	IpMax      sql.NullString `json:"ipMax"`
-	IsUnique_2 sql.NullBool   `json:"isUnique2"`
-}
-
-func (q *Queries) GetScan(ctx context.Context, id int64) (GetScanRow, error) {
-	row := q.db.QueryRowContext(ctx, getScan, id)
-	var i GetScanRow
+// LEFT JOIN port_ranges ON scans.id = port_ranges.scan_id
+// LEFT JOIN ip_ranges ON scans.id = ip_ranges.scan_id
+func (q *Queries) GetScan(ctx context.Context, userID int64) (Scan, error) {
+	row := q.db.QueryRowContext(ctx, getScan, userID)
+	var i Scan
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
 		&i.Scenario,
 		&i.CreatedAt,
 		&i.UpdatedAt,
-		&i.ID_2,
-		&i.ScanID,
-		&i.RangeMin,
-		&i.RangeMax,
-		&i.IsUnique,
-		&i.ID_3,
-		&i.ScanID_2,
-		&i.IpMin,
-		&i.IpMax,
-		&i.IsUnique_2,
 	)
 	return i, err
 }

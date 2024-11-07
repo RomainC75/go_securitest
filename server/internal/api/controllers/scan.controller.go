@@ -30,6 +30,20 @@ func NewScanCtrl() *ScanCtrl {
 	}
 }
 
+func (c *ScanCtrl) HandleGetScan(w http.ResponseWriter, r *http.Request) {
+	userId := (r.Context().Value("user_id")).(int64)
+	scan, err := c.scanSrv.ListScansByUser(userId)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	utils.SendJson(w, http.StatusOK, map[string]any{
+		"scan": scan,
+	})
+}
+
 func (c *ScanCtrl) HandleScan(w http.ResponseWriter, r *http.Request) {
 	userId := (r.Context().Value("user_id")).(int64)
 

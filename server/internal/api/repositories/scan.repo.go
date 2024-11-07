@@ -37,7 +37,12 @@ func (scanRepo *ScanRepo) CreateScan(userId int64, scenario int, scanData shared
 	return (*scanRepo.Store).CreateScan(ctx, scanToCreate)
 }
 
-func (scanRepo *ScanRepo) GetUser(email string) (db.User, error) {
+func (scanRepo *ScanRepo) GetScan(userId int64) (db.Scan, error) {
 	ctx := context.Background()
-	return (*scanRepo.Store).GetUser(ctx, email)
+	return (*scanRepo.Store).GetScan(ctx, userId)
+}
+
+func (scanRepo *ScanRepo) ListScansByUser(userId int64) ([]db.ListScansByUserRow, error) {
+	ctx := context.Background()
+	return (*scanRepo.Store).ListScansByUser(ctx, userId)
 }

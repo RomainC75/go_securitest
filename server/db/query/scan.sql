@@ -2,7 +2,7 @@
 SELECT * FROM scans
 LEFT JOIN port_ranges ON scans.id = port_ranges.scan_id
 LEFT JOIN ip_ranges ON scans.id = ip_ranges.scan_id
-WHERE scans.id = $1 LIMIT 1;
+WHERE scans.user_id = $1 LIMIT 1;
 
 -- name: ListScansByUser :many
 SELECT * FROM scans
@@ -14,7 +14,7 @@ ORDER BY scans.updated_at;
 -- name: CreateScan :one
 WITH inserted_scan AS (
     INSERT INTO scans (user_id, scenario, created_at, updated_at)
-    VALUES (1, 1, NOW(), NOW())
+    VALUES ($1, $2, NOW(), NOW())
     RETURNING id
 ),
 inserted_port_ranges AS (

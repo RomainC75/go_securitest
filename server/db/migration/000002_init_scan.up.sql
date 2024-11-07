@@ -24,6 +24,3 @@ CREATE TABLE ip_ranges (
     is_unique BOOLEAN,
     FOREIGN KEY (scan_id) REFERENCES scans(id)
 );
-
-
-

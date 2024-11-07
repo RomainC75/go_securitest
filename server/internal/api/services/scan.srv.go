@@ -2,6 +2,7 @@ package services
 
 import (
 	"encoding/json"
+	db "server/db/sqlc"
 	"server/internal/api/repositories"
 	"server/internal/queue"
 	shared_dto "shared/dto"
@@ -17,6 +18,14 @@ func NewScanSrv() *ScanSrv {
 		q:        queue.GetQueue(),
 		scanRepo: repositories.NewScanRepo(),
 	}
+}
+
+func (ss *ScanSrv) ListScansByUser(userId int64) ([]db.ListScansByUserRow, error) {
+	return ss.scanRepo.ListScansByUser(userId)
+}
+
+func (ss *ScanSrv) GetScan(userId int64) (db.Scan, error) {
+	return ss.scanRepo.GetScan(userId)
 }
 
 func (ss *ScanSrv) CreateScan(userId int, scenario int, reqData shared_dto.FullPortTestScenarioReq) error {
