@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"database/sql"
 	db "server/db/sqlc"
 	shared_dto "shared/dto"
 )
@@ -23,9 +24,15 @@ func (scanRepo *ScanRepo) CreateScan(userId int64, scenario int, scanData shared
 		UserID:   userId,
 		Scenario: int32(scenario),
 		RangeMin: int32(scanData.PortTestScenario.PortRange.Min),
-		RangeMax: scanData.PortTestScenario.PortRange.Max,
-		IpMin:    scanData.PortTestScenario.IPRange.IpMin,
-		IpMax:    scanData.PortTestScenario.IPRange.IpMax,
+		RangeMax: sql.NullInt32{
+			Int32: scanData.PortTestScenario.PortRange.Max.Int32,
+			Valid: scanData.PortTestScenario.PortRange.Max.Valid,
+		},
+		IpMin: scanData.PortTestScenario.IPRange.IpMin,
+		IpMax: sql.NullString{
+			String: scanData.PortTestScenario.IPRange.IpMax.String,
+			Valid:  scanData.PortTestScenario.IPRange.IpMax.Valid,
+		},
 	}
 	return (*scanRepo.Store).CreateScan(ctx, scanToCreate)
 }

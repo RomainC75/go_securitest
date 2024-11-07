@@ -14,7 +14,7 @@ WITH inserted_scan AS (
 ),
 inserted_port_ranges AS (
     INSERT INTO port_ranges (scan_id, range_min, range_max)
-    VALUES (id, $3, $4)
+    VALUES (inserted_scan.id, $3, $4)
     RETURNING scan_id
 ),
 inserted_ip_ranges AS (
