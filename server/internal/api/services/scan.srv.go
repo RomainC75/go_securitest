@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"encoding/json"
 	db "server/db/sqlc"
 	"server/internal/api/repositories"
@@ -24,13 +25,13 @@ func (ss *ScanSrv) ListScansByUser(userId int64) ([]db.ListScansByUserRow, error
 	return ss.scanRepo.ListScansByUser(userId)
 }
 
-func (ss *ScanSrv) GetScan(userId int64) (db.Scan, error) {
+func (ss *ScanSrv) GetScan(userId int64) (db.GetScanRow, error) {
 	return ss.scanRepo.GetScan(userId)
 }
 
-func (ss *ScanSrv) CreateScan(userId int, scenario int, reqData shared_dto.FullPortTestScenarioReq) error {
+func (ss *ScanSrv) CreateScan(c context.Context, userId int, scenario int, reqData shared_dto.FullPortTestScenarioReq) error {
 
-	createdScan, err := ss.scanRepo.CreateScan(int64(userId), scenario, reqData)
+	createdScan, err := ss.scanRepo.CreateScan(c, int64(userId), scenario, reqData)
 	if err != nil {
 		return err
 	}

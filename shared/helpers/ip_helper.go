@@ -47,14 +47,14 @@ func ExtractIpAddressesFromRange(ipRange work_dto.IpRange) ([]string, error) {
 		return []string{ipRange.IpMin}, nil
 	}
 
-	if !IsIpValid(ipRange.IpMin) || !IsIpValid(ipRange.IpMax.String) {
+	if !IsIpValid(ipRange.IpMin) || ipRange.IpMax != nil {
 		return []string{}, errors.New("invalid Ip")
 	}
 	currentIp, err := ConvertStringIpToInts(ipRange.IpMin)
 	if err != nil {
 		return []string{}, err
 	}
-	targetIp, err := ConvertStringIpToInts(ipRange.IpMax.String)
+	targetIp, err := ConvertStringIpToInts(ipRange.IpMax)
 	if err != nil {
 		return []string{}, err
 	}

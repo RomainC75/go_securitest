@@ -1,7 +1,6 @@
 package shared_dto
 
 import (
-	"shared/types"
 	"time"
 )
 
@@ -30,12 +29,12 @@ type PortTestScenario struct {
 }
 
 type IpRange struct {
-	IpMin  string            `json:"ip_min" validate:"required"`
-	IpMax  types.SNullString `json:"ip_max"`
-	Unique bool              `json:"unique" validate:"boolean"`
+	IpMin  string  `json:"ip_min" validate:"required"`
+	IpMax  *string `json:"ip_max,omitempty"`
+	Unique bool    `json:"unique" validate:"boolean"`
 }
 
 type PortRange struct {
-	Min int              `json:"min" validate:"required,number"`
-	Max types.SNullInt32 `json:"max" `
+	Min int32  `json:"min" validate:"required,number"`
+	Max *int32 `json:"max,omitempty" `
 }

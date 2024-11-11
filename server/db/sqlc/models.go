@@ -6,11 +6,10 @@ import (
 )
 
 type IpRange struct {
-	ID       int64          `json:"id"`
-	ScanID   int64          `json:"scanId"`
-	IpMin    string         `json:"ipMin"`
-	IpMax    sql.NullString `json:"ipMax"`
-	IsUnique sql.NullBool   `json:"isUnique"`
+	ID     int64          `json:"id"`
+	ScanID int64          `json:"scanId"`
+	IpMin  string         `json:"ipMin"`
+	IpMax  sql.NullString `json:"ipMax"`
 }
 
 type PortRange struct {

@@ -15,18 +15,22 @@ ORDER BY scans.updated_at;
 WITH inserted_scan AS (
     INSERT INTO scans (user_id, scenario, created_at, updated_at)
     VALUES ($1, $2, NOW(), NOW())
-    RETURNING id
+    RETURNING id, user_id, scenario, created_at, updated_at
 ),
 inserted_port_ranges AS (
     INSERT INTO port_ranges (scan_id, range_min, range_max)
     VALUES ((SELECT id FROM inserted_scan), $3, $4)
-    RETURNING scan_id
+    RETURNING scan_id, range_min, range_max
 ),
 inserted_ip_ranges AS (
-    INSERT INTO ip_ranges (scan_id, ip_min, ip_max, is_unique)
-    VALUES ((SELECT id FROM inserted_scan), $5, $6, $7)
+    INSERT INTO ip_ranges (scan_id, ip_min, ip_max)
+    VALUES ((SELECT id FROM inserted_scan), $5, $6)
+    RETURNING scan_id, ip_min, ip_max
 )
-SELECT * FROM scans WHERE id = (SELECT id FROM inserted_scan);
+SELECT * FROM inserted_scan
+LEFT JOIN inserted_port_ranges ON inserted_scan.id = inserted_port_ranges.scan_id
+LEFT JOIN inserted_ip_ranges ON inserted_scan.id = inserted_ip_ranges.scan_id
+;
 
 -- -- name: DeleteUser :exec
 -- DELETE FROM users

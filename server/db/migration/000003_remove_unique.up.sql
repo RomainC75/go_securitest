@@ -1,0 +1,1 @@
+ALTER TABLE ip_ranges DROP COLUMN is_unique;

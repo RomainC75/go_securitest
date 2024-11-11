@@ -14,9 +14,20 @@ type SNullString struct {
 }
 
 func (ns *SNullString) UnmarshalJSON(b []byte) error {
-	err := json.Unmarshal(b, &ns.String)
-	ns.Valid = (err == nil)
-	return err
+	// err := json.Unmarshal(b, &ns.String)
+	// ns.Valid = (err == nil)
+	// return err
+	var s *string
+	if err := json.Unmarshal(b, &s); err != nil {
+		return err
+	}
+	if s != nil {
+		ns.Valid = true
+		ns.String = *s
+	} else {
+		ns.Valid = false
+	}
+	return nil
 }
 
 func (s SNullString) MarshalJSON() ([]byte, error) {
