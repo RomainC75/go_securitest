@@ -73,12 +73,15 @@ func (c *ScanCtrl) HandleScan(w http.ResponseWriter, r *http.Request) {
 
 	shared_utils.PrettyDisplay("body ", u)
 
-	err = c.scanSrv.CreateScan(r.Context(), int(userId), scenarioNum, u)
+	createdScan, err := c.scanSrv.CreateScan(r.Context(), int(userId), scenarioNum, u)
 	if err != nil {
 		logrus.Warnf("err : %s \n", err.Error())
 	}
 
+	// scanToReturn := dto_res.FilterStruct(createdScan, "createdAt")
+
 	utils.SendJson(w, http.StatusOK, map[string]any{
 		"message": "/analyse",
+		"scan":    createdScan,
 	})
 }

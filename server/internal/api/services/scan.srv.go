@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	db "server/db/sqlc"
+	tx_types "server/db/sqlc/txTypes"
 	"server/internal/api/repositories"
 	"server/internal/queue"
 	shared_dto "shared/dto"
@@ -30,11 +31,11 @@ func (ss *ScanSrv) GetScan(userId int64) (db.GetScanRow, error) {
 	return ss.scanRepo.GetScan(userId)
 }
 
-func (ss *ScanSrv) CreateScan(c context.Context, userId int, scenario int, reqData shared_dto.FullPortTestScenarioReq) error {
+func (ss *ScanSrv) CreateScan(c context.Context, userId int, scenario int, reqData shared_dto.FullPortTestScenarioReq) (tx_types.CreatedScanTx, error) {
 
 	createdScan, err := ss.scanRepo.CreateTxScan(c, int64(userId), scenario, reqData)
 	if err != nil {
-		return err
+		return tx_types.CreatedScanTx{}, err
 	}
 	shared_utils.PrettyDisplay("Created Scan", createdScan)
 	eventReqData := shared_dto.Event{
@@ -45,10 +46,10 @@ func (ss *ScanSrv) CreateScan(c context.Context, userId int, scenario int, reqDa
 
 	b, err := json.Marshal(eventReqData)
 	if err != nil {
-		return err
+		return tx_types.CreatedScanTx{}, err
 	}
 
 	ss.q.Strategy.Push("azerty", b)
 
-	return nil
+	return createdScan, nil
 }
