@@ -7,6 +7,7 @@ import (
 	"server/internal/api/repositories"
 	"server/internal/queue"
 	shared_dto "shared/dto"
+	shared_utils "shared/utils"
 )
 
 type ScanSrv struct {
@@ -31,13 +32,14 @@ func (ss *ScanSrv) GetScan(userId int64) (db.GetScanRow, error) {
 
 func (ss *ScanSrv) CreateScan(c context.Context, userId int, scenario int, reqData shared_dto.FullPortTestScenarioReq) error {
 
-	createdScan, err := ss.scanRepo.CreateScan(c, int64(userId), scenario, reqData)
+	createdScan, err := ss.scanRepo.CreateTxScan(c, int64(userId), scenario, reqData)
 	if err != nil {
 		return err
 	}
+	shared_utils.PrettyDisplay("Created Scan", createdScan)
 	eventReqData := shared_dto.Event{
-		Id:        createdScan.ID,
-		CreatedAt: createdScan.CreatedAt,
+		Id:        createdScan.Scan.ID,
+		CreatedAt: createdScan.Scan.CreatedAt,
 		Content:   reqData,
 	}
 

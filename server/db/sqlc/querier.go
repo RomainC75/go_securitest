@@ -5,7 +5,10 @@ import (
 )
 
 type Querier interface {
+	CreateIpRanges(ctx context.Context, arg CreateIpRangesParams) (IpRange, error)
+	CreatePortRanges(ctx context.Context, arg CreatePortRangesParams) (PortRange, error)
 	CreateScan(ctx context.Context, arg CreateScanParams) (CreateScanRow, error)
+	CreateScanTx(ctx context.Context, arg CreateScanTxParams) (Scan, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	DeleteUser(ctx context.Context, email string) error
 	GetScan(ctx context.Context, userID int64) (GetScanRow, error)

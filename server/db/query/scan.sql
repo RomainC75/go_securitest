@@ -32,6 +32,11 @@ LEFT JOIN inserted_port_ranges ON inserted_scan.id = inserted_port_ranges.scan_i
 LEFT JOIN inserted_ip_ranges ON inserted_scan.id = inserted_ip_ranges.scan_id
 ;
 
+-- name: CreateScanTx :one
+INSERT INTO scans (user_id, scenario, created_at, updated_at)
+VALUES ($1, $2, NOW(), NOW())
+RETURNING *;
+
 -- -- name: DeleteUser :exec
 -- DELETE FROM users
 -- WHERE email = $1;

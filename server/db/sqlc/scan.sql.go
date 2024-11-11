@@ -76,6 +76,30 @@ func (q *Queries) CreateScan(ctx context.Context, arg CreateScanParams) (CreateS
 	return i, err
 }
 
+const createScanTx = `-- name: CreateScanTx :one
+INSERT INTO scans (user_id, scenario, created_at, updated_at)
+VALUES ($1, $2, NOW(), NOW())
+RETURNING id, user_id, scenario, created_at, updated_at
+`
+
+type CreateScanTxParams struct {
+	UserID   int64 `json:"userId"`
+	Scenario int32 `json:"scenario"`
+}
+
+func (q *Queries) CreateScanTx(ctx context.Context, arg CreateScanTxParams) (Scan, error) {
+	row := q.db.QueryRowContext(ctx, createScanTx, arg.UserID, arg.Scenario)
+	var i Scan
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Scenario,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const getScan = `-- name: GetScan :one
 SELECT scans.id, user_id, scenario, created_at, updated_at, port_ranges.id, port_ranges.scan_id, range_min, range_max, is_unique, ip_ranges.id, ip_ranges.scan_id, ip_min, ip_max FROM scans
 LEFT JOIN port_ranges ON scans.id = port_ranges.scan_id
