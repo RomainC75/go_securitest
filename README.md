@@ -1,3 +1,6 @@
+## migrate cli 
+
+brew install golang-migrate
 
 
 ### backend 
