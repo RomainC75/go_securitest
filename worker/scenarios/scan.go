@@ -9,8 +9,6 @@ import (
 	shared_utils "shared/utils"
 	"sync"
 	"time"
-
-	"github.com/sirupsen/logrus"
 )
 
 type Scan struct {
@@ -29,8 +27,8 @@ type ScanResult struct {
 }
 
 type PortResponse struct {
-	Num    int  `json:"num"`
-	IsOpen bool `json:"is_open"`
+	Num    int32 `json:"num"`
+	IsOpen bool  `json:"is_open"`
 }
 
 type Analysis struct {
@@ -41,32 +39,37 @@ type Analysis struct {
 type PortResponseMap map[string][]PortResponse
 
 func (s *Scan) Check() error {
-	if s.payload.PortRange.Min > s.payload.PortRange.Max {
+	if s.payload.PortRange.Max != nil && s.payload.PortRange.Min > *s.payload.PortRange.Max {
 		return errors.New("portRange min > max")
 	}
 	return nil
 }
 
 func (s *Scan) Run() (interface{}, error) {
-	logrus.Warn("=> scan beginning")
-	shared_utils.PrettyDisplay("SCAN : ", s.payload)
-
 	portResponses := PortResponseMap{}
 
 	var wg sync.WaitGroup
 	resultChan := make(chan Analysis)
 	done := make(chan int)
 	goMerger(portResponses, resultChan, done)
+
 	shared_utils.PrettyDisplay("SCAN22 : ", s.payload)
+
 	addresses, err := helpers.ExtractIpAddressesFromRange(s.payload.IPRange)
 
-	shared_utils.PrettyDisplay("ADDRESSES : ", addresses)
 	if err != nil {
 		return ScanResult{}, err
 	}
 
+	var portMax int32
+	if s.payload.PortRange.Max != nil {
+		portMax = *s.payload.PortRange.Max
+	} else {
+		portMax = s.payload.PortRange.Min
+	}
+
 	for _, address := range addresses {
-		for i := s.payload.PortRange.Min; i <= s.payload.PortRange.Max; i++ {
+		for i := s.payload.PortRange.Min; i <= portMax; i++ {
 			wg.Add(1)
 			goScanUnit(address, i, resultChan, &wg)
 		}
@@ -89,7 +92,6 @@ func goMerger(portResponses PortResponseMap, resultChan chan Analysis, done <-ch
 			case response := <-resultChan:
 
 				if response.portResponse.IsOpen {
-					fmt.Println("==> ", response)
 					portResponses[response.ip] = append(portResponses[response.ip], response.portResponse)
 				}
 			}
@@ -97,7 +99,7 @@ func goMerger(portResponses PortResponseMap, resultChan chan Analysis, done <-ch
 	}()
 }
 
-func goScanUnit(address string, i int, resultChan chan Analysis, wg *sync.WaitGroup) {
+func goScanUnit(address string, i int32, resultChan chan Analysis, wg *sync.WaitGroup) {
 	go func() {
 		port := i
 		defer wg.Done()
@@ -108,7 +110,6 @@ func goScanUnit(address string, i int, resultChan chan Analysis, wg *sync.WaitGr
 			Num: port,
 		}
 		if err == nil {
-			fmt.Printf("==> ", port)
 			portResp.IsOpen = true
 		}
 		resultChan <- Analysis{

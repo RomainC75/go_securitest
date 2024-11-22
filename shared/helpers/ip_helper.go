@@ -54,14 +54,21 @@ func ExtractIpAddressesFromRange(ipRange work_dto.IpRange) ([]string, error) {
 	if err != nil {
 		return []string{}, err
 	}
-	targetIp, err := ConvertStringIpToInts(ipRange.IpMax)
-	if err != nil {
-		return []string{}, err
+
+	var ipMax [4]int
+	if ipRange.IpMax != nil {
+		ipMax, err = ConvertStringIpToInts(*ipRange.IpMax)
+		if err != nil {
+			return []string{}, err
+		}
+	} else {
+		ipMax = currentIp
 	}
+
 	ips := []string{}
 	ips = append(ips, convertIntIpToString(currentIp))
 	for {
-		isEqual, err := IsIpsEquals(currentIp, targetIp)
+		isEqual, err := IsIpsEquals(currentIp, ipMax)
 		if err != nil {
 			return []string{}, err
 		}
