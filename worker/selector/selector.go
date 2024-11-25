@@ -1,5 +1,0 @@
-package selector
-
-func Select() {
-
-}

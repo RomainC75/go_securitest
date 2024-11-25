@@ -7,7 +7,6 @@ import (
 	"os"
 	"shared/config"
 	"shared/helpers/kafka_helper"
-	shared_utils "shared/utils"
 	"worker/queue"
 
 	"github.com/sirupsen/logrus"
@@ -32,8 +31,6 @@ func main() {
 		config.KAFKA_TOPIC_RES:         viper.GetString(string(config.KAFKA_TOPIC_RES)),
 		config.KAFKA_CONSUMER_GROUP_ID: viper.GetString(string(config.KAFKA_CONSUMER_GROUP_ID)),
 	}
-
-	shared_utils.PrettyDisplay("envMp", envMp)
 
 	kafkaEnv, err := kafka_helper.NewKafkaHandler(
 		viper.GetString(string(config.KAFKA_TOPIC_RES)),
