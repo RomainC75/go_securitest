@@ -7,6 +7,7 @@ import (
 type Event struct {
 	Id        int64                   `json:"id" validate:"required"`
 	CreatedAt time.Time               `json:"createdAt" validate:"required"`
+	Scenario  int                     `json:"scenario" validate:"required"`
 	Content   FullPortTestScenarioReq `json:"content" validate:"required"`
 }
 

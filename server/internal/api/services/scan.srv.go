@@ -41,6 +41,7 @@ func (ss *ScanSrv) CreateScan(c context.Context, userId int, scenario int, reqDa
 	eventReqData := shared_dto.Event{
 		Id:        createdScan.Scan.ID,
 		CreatedAt: createdScan.Scan.CreatedAt,
+		Scenario:  scenario,
 		Content:   reqData,
 	}
 
