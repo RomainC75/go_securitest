@@ -2,8 +2,11 @@ package helpers
 
 import (
 	"fmt"
+	"log"
+	shared_utils "shared/utils"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -53,18 +56,16 @@ func TestIsIpsEquals(t *testing.T) {
 	}
 }
 
-// func TestExtractAddressesFromRange(t *testing.T) {
-// 	ipRange := work_dto.IpRange{
-// 		IpMin: "255.255.255.250",
-// 		IpMax: "0.0.0.2",
-// 	}
-// 	res, err := ExtractIpAddressesFromRange(ipRange)
-// 	if err != nil {
-// 		log.Fatal("xx")
-// 	}
-// 	utils.PrettyDisplay("ips : ", res)
-
-// }
+func TestExtractAddressesFromRange(t *testing.T) {
+	for _, ipRangeCase := range ipRanges {
+		res, err := ExtractIpAddressesFromRange(ipRangeCase.in)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		shared_utils.PrettyDisplay("ips : ", res)
+		assert.ElementsMatch(t, ipRangeCase.out, res)
+	}
+}
 
 func BenchmarkIsIpValid(b *testing.B) {
 	for i := 0; i < b.N; i++ {

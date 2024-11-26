@@ -47,7 +47,7 @@ func ExtractIpAddressesFromRange(ipRange work_dto.IpRange) ([]string, error) {
 		return []string{ipRange.IpMin}, nil
 	}
 
-	if !IsIpValid(ipRange.IpMin) || ipRange.IpMax != nil {
+	if !IsIpValid(ipRange.IpMin) || ipRange.IpMax == nil {
 		return []string{}, errors.New("invalid Ip")
 	}
 	currentIp, err := ConvertStringIpToInts(ipRange.IpMin)
