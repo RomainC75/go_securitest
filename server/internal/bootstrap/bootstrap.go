@@ -6,6 +6,7 @@ import (
 	"server/conf"
 	db "server/db/sqlc"
 	"server/internal/api"
+	"server/internal/api/cache/strategies"
 	validator_helper "server/internal/api/dtos/validator"
 	"server/internal/api/routing"
 	"server/internal/queue"
@@ -19,6 +20,8 @@ import (
 
 func Bootstrap() {
 	fmt.Println("==BOOTSTRAP==")
+
+	strategies.SetMemorySaving()
 
 	validator_helper.SetValidate()
 	config.Set(conf.VarList)

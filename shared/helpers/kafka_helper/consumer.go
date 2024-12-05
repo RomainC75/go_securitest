@@ -43,6 +43,10 @@ func (kh *KafkaHandler) Listen() {
 
 			selector := selector.NewSelector(myEvent.Scenario, *myEvent)
 			res, err := selector.Scenario.Run()
+			fmt.Println("---> res : ", res)
+			// TODO find singleton
+			b, err := json.Marshal(res)
+			err = kh.Push("pouet", b)
 
 			if err != nil {
 				log.Fatal("-> %s \n", err.Error())

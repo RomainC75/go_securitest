@@ -15,7 +15,7 @@ func NewResponseWriter(w *http.ResponseWriter) FakeResponseWriter {
 		w: w,
 		b: &arr,
 	}
-
+	(*w).Header().Set("Content-Type", "application/json")
 	return fw
 }
 
@@ -36,6 +36,6 @@ func (fw FakeResponseWriter) Send() {
 	(*fw.w).Write(**fw.b)
 }
 
-func (fw FakeResponseWriter) Get() []byte {
-	return **fw.b
+func (fw FakeResponseWriter) Get() (http.Header, []byte) {
+	return (*fw.w).Header(), **fw.b
 }

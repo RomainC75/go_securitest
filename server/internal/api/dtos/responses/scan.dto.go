@@ -1,6 +1,7 @@
 package dto_res
 
 import (
+	"database/sql"
 	"fmt"
 	"reflect"
 )
@@ -83,4 +84,103 @@ func FilterStruct2(v interface{}, excludeFields ...string) interface{} {
 	}
 
 	return newStruct.Interface()
+}
+
+// =====================
+
+func TransformNullStrings(input interface{}) interface{} {
+	return transformValue(reflect.ValueOf(input)).Interface()
+}
+
+func isTimeType(t reflect.Type) bool {
+	return t.String() == "time.Time"
+}
+
+func transformValue(val reflect.Value) reflect.Value {
+	// Handle pointers
+	if val.Kind() == reflect.Ptr {
+		if val.IsNil() {
+			return val
+		}
+		val = val.Elem()
+	}
+
+	fmt.Println("----->", val.Kind())
+	switch val.Kind() {
+
+	case reflect.Struct:
+		// Create a new struct of the same type
+		// fmt.Println("-----> new struct : " + val.Type().Name())
+		if isTimeType(val.Type()) {
+			return val
+		}
+		newStruct := reflect.New(val.Type()).Elem()
+
+		for i := 0; i < val.NumField(); i++ {
+
+			fmt.Println("-->", val.Type().Field(i).Name)
+			field := val.Field(i)
+
+			// Special handling for sql.NullString
+			if nullStr, ok := field.Interface().(sql.NullString); ok {
+				fmt.Println("-----> sql.NullString", nullStr.String, nullStr.Valid)
+				if nullStr.Valid {
+					// If Valid is true, set the field to the string value
+					// newString := reflect.New(field.Type()).Elem()
+					newStruct.Field(i).SetString(nullStr.String)
+
+					// newStr := reflect.ValueOf(nullStr.String)
+					// newStruct.Field(i).Set(newStr)
+				}
+				// If not Valid, the field is simply not set in the new struct
+				continue
+			}
+
+			// Recursive transformation for nested structs or pointer to structs
+			if field.Kind() == reflect.Struct ||
+				(field.Kind() == reflect.Ptr && field.Type().Elem().Kind() == reflect.Struct) {
+				transformedField := transformValue(field)
+				if !transformedField.IsZero() {
+					newStruct.Field(i).Set(transformedField)
+				}
+				continue
+			}
+
+			// Handling slices
+			if field.Kind() == reflect.Slice {
+				newSlice := reflect.MakeSlice(field.Type(), 0, field.Len())
+				for j := 0; j < field.Len(); j++ {
+					transformedItem := transformValue(field.Index(j))
+					if !transformedItem.IsZero() {
+						newSlice = reflect.Append(newSlice, transformedItem)
+					}
+				}
+				if newSlice.Len() > 0 {
+					newStruct.Field(i).Set(newSlice)
+				}
+				continue
+			}
+
+			// For other types, copy as-is if not zero
+			if !field.IsZero() {
+				newStruct.Field(i).Set(field)
+			}
+		}
+
+		return newStruct
+
+	case reflect.Slice:
+		// Handle slice of structs
+		newSlice := reflect.MakeSlice(val.Type(), 0, val.Len())
+		for i := 0; i < val.Len(); i++ {
+			transformedItem := transformValue(val.Index(i))
+			if !transformedItem.IsZero() {
+				newSlice = reflect.Append(newSlice, transformedItem)
+			}
+		}
+		return newSlice
+
+	default:
+		return val
+	}
 }

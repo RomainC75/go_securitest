@@ -2,7 +2,6 @@
 
 brew install golang-migrate
 
-
 ### backend 
 
 sqlc generate

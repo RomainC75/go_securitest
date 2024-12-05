@@ -4,23 +4,25 @@ import (
 	"fmt"
 	"net/http"
 	responsewriter "server/internal/api/cache/responseWriter"
-	"time"
+	"server/internal/api/cache/strategies"
 )
 
-type Data struct {
-	time    time.Time
-	content any
+type ICacheStrategy interface {
+	Set(key string, data []byte)
+	Get(key string) ([]byte, error)
+	DisplayAll()
 }
 
 type Cache struct {
 	data     map[string][]byte
 	fun      func(http.ResponseWriter, *http.Request)
-	strategy ICachStrategy
+	strategy ICacheStrategy
 }
 
 func NewCache(fn func(http.ResponseWriter, *http.Request)) *Cache {
 	return &Cache{
-		fun: fn,
+		fun:      fn,
+		strategy: strategies.GetMemorySaving(),
 	}
 }
 
@@ -29,18 +31,22 @@ func (c *Cache) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	rawUri := r.URL.RequestURI()
 
 	key := createCacheEndpoint(userId, rawUri)
-	if cached, ok := c.data[key]; ok {
-		w.Write(cached)
 
-		// TODO delete
+	// in cache // no error
+	if b, err := c.strategy.Get(key); err == nil {
+		fmt.Println("---> In Cache ! ")
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(b)
 		return
 	}
-
 	fw := responsewriter.NewResponseWriter(&w)
-	c.fun(fw, r)
 
-	b := fw.Get()
-	fmt.Println("---> byte to write : ", b)
+	/// run
+	c.fun(fw, r)
+	_, b := fw.Get()
+
+	c.strategy.Set(key, b)
+	c.strategy.DisplayAll()
 
 	fw.Send()
 }

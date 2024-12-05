@@ -4,9 +4,9 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
-func (kh *KafkaHandler) Push(key string, data []byte) {
+func (kh *KafkaHandler) Push(key string, data []byte) error {
 
-	kh.p.Produce(&kafka.Message{
+	return kh.p.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &kh.topicToProduce, Partition: kafka.PartitionAny},
 		Key:            []byte(key),
 		Value:          []byte(data),

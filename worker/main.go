@@ -22,6 +22,8 @@ var VarList = []config.ConfigVar{
 	"KAFKA_CONSUMER_GROUP_ID",
 }
 
+var queueRes *queue.SQueue
+
 func main() {
 	config.Set(VarList)
 
