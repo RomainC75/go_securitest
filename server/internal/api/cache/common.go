@@ -5,24 +5,26 @@ import (
 	"net/http"
 	responsewriter "server/internal/api/cache/responseWriter"
 	"server/internal/api/cache/strategies"
+	"time"
 )
 
 type ICacheStrategy interface {
-	Set(key string, data []byte)
+	Set(key string, data []byte, duration time.Duration)
 	Get(key string) ([]byte, error)
 	DisplayAll()
 }
 
 type Cache struct {
-	data     map[string][]byte
-	fun      func(http.ResponseWriter, *http.Request)
-	strategy ICacheStrategy
+	fun        func(http.ResponseWriter, *http.Request)
+	maxElapsed time.Duration
+	strategy   ICacheStrategy
 }
 
-func NewCache(fn func(http.ResponseWriter, *http.Request)) *Cache {
+func NewCache(fn func(http.ResponseWriter, *http.Request), maxElapsed time.Duration) *Cache {
 	return &Cache{
-		fun:      fn,
-		strategy: strategies.GetMemorySaving(),
+		fun:        fn,
+		maxElapsed: maxElapsed,
+		strategy:   strategies.GetMemorySaving(),
 	}
 }
 
@@ -45,7 +47,7 @@ func (c *Cache) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	c.fun(fw, r)
 	_, b := fw.Get()
 
-	c.strategy.Set(key, b)
+	c.strategy.Set(key, b, c.maxElapsed)
 	c.strategy.DisplayAll()
 
 	fw.Send()

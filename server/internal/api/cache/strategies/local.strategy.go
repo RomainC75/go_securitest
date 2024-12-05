@@ -18,31 +18,29 @@ func GetMemorySaving() *MemorySaving {
 }
 
 type CacheData struct {
-	time    time.Time
-	content []byte
+	time     time.Time
+	content  []byte
+	duration time.Duration
 }
 
 type MemorySaving struct {
 	// sync.Map
-	mp         map[string]CacheData
-	mu         *sync.Mutex
-	maxElapsed time.Duration
+	mp map[string]CacheData
+	mu *sync.Mutex
 }
-
-var MAX_ELAPSED time.Duration = time.Second * 5
 
 func NewMemorySaving() *MemorySaving {
 	return &MemorySaving{
-		mp:         map[string]CacheData{},
-		mu:         &sync.Mutex{},
-		maxElapsed: MAX_ELAPSED,
+		mp: map[string]CacheData{},
+		mu: &sync.Mutex{},
 	}
 }
 
-func (ms *MemorySaving) Set(key string, data []byte) {
+func (ms *MemorySaving) Set(key string, data []byte, duration time.Duration) {
 	d := CacheData{
-		time:    time.Now(),
-		content: data,
+		time:     time.Now(),
+		content:  data,
+		duration: duration,
 	}
 	ms.mu.Lock()
 	ms.mp[key] = d
@@ -51,8 +49,7 @@ func (ms *MemorySaving) Set(key string, data []byte) {
 
 func (ms *MemorySaving) Get(key string) ([]byte, error) {
 	if d, ok := ms.mp[key]; ok {
-		// fmt.Println("-> d :", d.time, d.content[:20])
-		if time.Since(d.time) < ms.maxElapsed {
+		if time.Since(d.time) < d.duration {
 			return d.content, nil
 		} else {
 			ms.Delete(key)

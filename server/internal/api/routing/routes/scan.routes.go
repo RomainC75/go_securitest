@@ -5,6 +5,7 @@ import (
 	"server/internal/api/cache"
 	"server/internal/api/controllers"
 	"server/internal/api/middlewares"
+	"time"
 )
 
 func AnalyseRoutes(mux *http.ServeMux) {
@@ -14,6 +15,7 @@ func AnalyseRoutes(mux *http.ServeMux) {
 		middlewares.AuthMiddleware(
 			cache.NewCache(
 				http.HandlerFunc(controllers.HandleGetScan),
+				time.Second,
 			),
 		),
 	)
